@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}">
+</head>
+<body>
+	<!-- Page Content -->
+	<div class="container blog-content">
+
+		<div class="row">
+
+			<!-- 左侧栏目 -->
+			<div class="col-md-4 col-sm-4 col-11">
+
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-12">
+						<span> <a href="/u/waylau"
+							th:href="'/u/' + ${user.username}" title="waylau"
+							th:title="${user.username}"> <img
+								th:src="${user.avatar} == null ? '/images/avatar-defualt.jpg' : ${user.avatar} "
+								class="blog-avatar-230">
+						</a>
+						</span>
+
+					</div>
+
+				</div>
+				<br>
+				<div class="row">
+
+					<div class="col-md-12 col-sm-12 col-12">
+						<h2 class="card-text" th:text="${user.name}">Whichard</h2>
+						<h4 class="card-text"
+							th:if="${#strings.contains(user.authorities[0],'ROLE_ADMIN')}">网站管理员</h4>
+						<h4 class="card-text"
+							th:if="${#strings.contains(user.authorities[0],'ROLE_USER')}">博主</h4>
+						<h4 class="card-text"
+							th:if="${#strings.contains(user.authorities[0],'ROLE_VISTOR')}">普通用户</h4>
+					</div>
+				</div>
+
+				<br>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-12">
+						<h5>
+							<i class="fa fa-envelope-o" aria-hidden="true"></i> <a
+								href="mailto:waylau521@gmail.com"
+								th:href="'mailto:'+ ${user.email}" th:text="${user.email}">839713259@qq.com</a>
+						</h5>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-12">
+						<h5 th:if="${user.username eq 'Whichard'}">&nbsp;&nbsp;&nbsp;现为电子科技大学研二学生，研究方向为二进制安全，网站开发、安全，协议逆向研究等</h5>
+					</div>
+				</div>
+				<br> <br>
+				<div class="row" th:if="${user.username eq 'Whichard'}">
+					<div class="col-md-12 col-sm-12 col-12">
+						<a
+							href="http://wpa.qq.com/msgrd?v=3&uin=839713259&site=qq&menu=yes"
+							target="view_window"> <span class="fa-stack fa-lg"> <i
+								class="fa fa-circle fa-stack-2x"></i> <i
+								class="fa fa-qq fa-stack-1x fa-inverse"></i>
+						</span>
+						</a> <a href="https://weibo.com/p/1005053175938672"
+							target="view_window"> <span class="fa-stack fa-lg"> <i
+								class="fa fa-circle fa-stack-2x"></i> <i
+								class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+						</span>
+						</a> <a href="https://github.com/CuteXiaoKe" target="view_window">
+							<span class="fa-stack fa-lg"> <i
+								class="fa fa-circle fa-stack-2x"></i> <i
+								class="fa fa-github fa-stack-1x fa-inverse"></i>
+						</span>
+						</a> <a href="https://blog.csdn.net/u012397189" target="view_window">
+							<span class="fa-stack fa-lg"> <i
+								class="fa fa-circle fa-stack-2x"></i> <i
+								class="fa fa-stack-1x fa-inverse">C</i>
+						</span>
+						</a> <a href="http://steamcommunity.com/profiles/76561198135020650/"
+							target="view_window"> <span class="fa-stack fa-lg"> <i
+								class="fa fa-circle fa-stack-2x"></i> <i
+								class="fa fa-steam-square fa-stack-1x fa-inverse"></i>
+						</span>
+						</a>
+					</div>
+				</div>
+				<br>
+
+				<!-- 分类 -->
+				<div id="catalogMain"
+					th:if="not ${#strings.contains(user.authorities[0],'ROLE_VISTOR')}">
+					<div class="card my-4" id="catalogRepleace">
+						<h5 class="card-header">
+							<i class="fa fa-bars" aria-hidden="true"></i> 分类 <a
+								href="javascript:void(0)" th:if="${isCatalogsOwner}"
+								class="blog-add-catalog blog-right" data-toggle="modal"
+								data-target="#flipFlop" role="button"><i class="fa fa-plus"
+								aria-hidden="true"></i></a>
+						</h5>
+
+						<ul class="list-group" th:each="catalog : ${catalogs}"
+							th:object="${catalog}">
+							<div class="blog-list-group-item">
+
+								<a href="javascript:void(0)" th:attr="catalogId=*{id}"
+									class="blog-query-by-catalog blog-title"> [[*{name}]] </a> <span
+									class="blog-right"> <a href="javascript:void(0)"
+									th:if="${isCatalogsOwner}" class="blog-edit-catalog"
+									data-toggle="modal" data-target="#flipFlop" role="button"
+									th:attr="catalogId=*{id}"><i class="fa fa-pencil-square-o"
+										aria-hidden="true"></i></a> <a href="javascript:void(0)"
+									th:if="${isCatalogsOwner}" class="blog-delete-catalog"
+									th:attr="catalogId=*{id}"><i class="fa fa-times"
+										aria-hidden="true"></i></a>
+								</span>
+
+							</div>
+						</ul>
+					</div>
+				</div>
+				<br> <br> <br> <br> <br> <br> <br>
+			</div>
+
+
+			<!-- 右侧栏目 -->
+
+
+			<div class="col-md-8 col-sm-8 d-none d-sm-block"
+				th:if="not ${#strings.contains(user.authorities[0],'ROLE_VISTOR')} or not ${isOwner}">
+				<!-- 工具栏 -->
+
+				<ul class="nav nav-tabs mr-auto">
+
+					<li class="nav-item"><a class="nav-link "
+						data-th-classappend="${order} eq 'new' ? 'active' : ''"
+						href="javascript:void(0)"
+						th:attr="url='/u/'+${user.username}+'/blogs?order=new'">最新</a></li>
+
+					<li class="nav-item"><a class="nav-link"
+						data-th-classappend="${order} eq 'hot' ? 'active' : ''"
+						href="javascript:void(0)"
+						th:attr="url='/u/'+${user.username}+'/blogs?order=hot'">最热</a></li>
+
+					<form class="form-inline mt-2 mt-md-0">
+						<input class="form-control mr-sm-2" type="text" placeholder="搜索"
+							id="keyword" th:value="${keyword}"> <a
+							href="javascript:void(0)"
+							class="btn btn-outline-secondary my-2 my-sm-0" id="searchBlogs"><i
+							class="fa fa-search" aria-hidden="true"></i></a>
+					</form>
+
+
+				</ul>
+
+
+				<div id="mainContainer">
+					<div id="mainContainerRepleace">
+						<div class="card mb-4 blog-list-container" th:each="blog : ${blogList}">
+							<div class="card-block">
+								<h2 class="card-title">
+									<a href="/u/waylau/blogs/1" class="card-link blog-title"
+										title="waylau"
+										th:href="'/u/' + ${blog.user.username} + '/blogs/'+ ${blog.id}"
+										th:title="${blog.user.username}"> <span
+										style="color: #ff0000" th:if="${blog.priority}">[置顶]</span>[[${blog.title}]]
+									</a>
+									<a href="/u/waylau"
+									   th:href="'/u/' + ${blog.user.username}+ '/blogs/edit/'+ ${blog.id}"
+									   class="btn btn-primary float-right">编辑</a> <a
+<!--										href="javascript:void(0)"-->
+<!--										class="btn btn-primary float-right blog-delete-blog">删除-->
+									</a>
+								</h2>
+								<p class="card-text blog-summary" th:text="${blog.summary}">使用
+									OAuth 2.0
+									认证的的好处是显然易见的。你只需要用同一个账号密码，就能在各个网站进行访问，而免去了在每个网站都进行注册的繁琐过程。
+									本文将介绍 OAuth 2.0 的原理，并基于 Spring Security 和 GitHub 账号，来演示 OAuth
+									2.0 的认证的过程。</p>
+								<div class="card-text">
+									发表于 [[${#dates.format(blog.createTime, 'yyyy-MM-dd HH:mm')}]] <span
+										class="fr"> <i class="fa fa-eye" aria-hidden="true">[[${blog.readSize}]]</i>
+										<i class="fa fa-heart-o" aria-hidden="true">[[${blog.voteSize}]]</i>
+										<i class="fa fa-comment-o" aria-hidden="true">[[${blog.commentSize}]]</i>
+
+									</span>
+								</div>
+							</div>
+						</div>
+
+						<div th:replace="~{fragments/page :: page}">...</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8 col-sm-8 hiddent"
+				th:if="${#strings.contains(user.authorities[0],'ROLE_VISTOR')} and ${isOwner}">
+				<p class="text-muted">您是普通用户，如果想成为博主，请联系网站管理员哟~</p>
+			</div>
+		</div>
+		<!-- /.row -->
+
+	</div>
+	<!-- /.container -->
+
+	<div th:if="${#strings.contains(user.authorities[0],'ROLE_VISTOR')}">
+		<br> <br> <br> <br> <br> <br> <br>
+	</div>
+
+	<!-- The modal -->
+	<div class="modal fade" id="flipFlop" tabindex="-1" role="dialog"
+		aria-labelledby="modalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modalLabel">新增/编辑</h4>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+				</div>
+				<div class="modal-body" id="catalogFormContainer"></div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" data-dismiss="modal"
+						id="submitEditCatalog">提交</button>
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- The modal 2-->
+	<div class="modal fade" id="confirm" tabindex="-1" role="dialog"
+		aria-labelledby="modalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modal2Label">警告</h4>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="modal2Body">
+					删除分类会同时删除博客/分类/评论/点赞，是否删除</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" data-dismiss="modal"
+						id="submitDelete">确定</button>
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="~{fragments/footer :: footer}">...</div>
+
+	<!-- JavaScript -->
+	<script th:inline="javascript">
+    var username = [[${user.username}]];
+</script>
+	<script src="../../js/userspace/u.js" th:src="@{/js/userspace/u.js}"></script>
+
+</body>
+</html>

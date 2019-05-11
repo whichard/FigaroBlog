@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/header :: header}">
+</head>
+<body>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div class="container blog-content-container">
+
+		<form th:action="@{~/login}" method="post">
+			<h2>请登录</h2>
+			<br>
+			<div class="form-group col-8 col-md-6 col-sm-6">
+				<label for="username" class="col-form-label">账号</label> <input
+					type="text" class="form-control" id="username" name="username"
+					maxlength="50" placeholder="请输入账号">
+			</div>
+			<div class="form-group col-8 col-md-6 col-md-6">
+				<label for="password" class="col-form-label">密码</label> <input
+					type="password" class="form-control" id="password" name="password"
+					maxlength="30" placeholder="请输入密码">
+			</div>
+			<div class="form-group col-8  col-md-6 col-md-6">
+				<div class="alert alert-danger" th:if="${loginError}">
+					<a href="#" class="close" data-dismiss="alert"> &times; </a> <strong
+						th:text="${errorMsg}">Error!</strong>
+				</div>
+			</div>
+			<div class="form-group col-8  col-md-6 col-md-6">
+				<input type="checkbox" name="remember-me"> 记住我
+			</div>
+			<div class="form-group col-8  col-md-6 col-md-6">
+				<button type="submit" class="btn btn-primary">登录</button>
+			</div>
+
+		</form>
+	</div>
+	<!-- /container -->
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div th:replace="~{fragments/footer :: footer}">...</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<div class="card-header bg-dark font-white">
+
+    <div class="input-group col-md-7 col-xl-7 col-sm-7 col-7">
+
+        <input type="text" class="form-control" id="searchName"
+               placeholder="输入评论名称进行搜索"> <span class="input-group-btn">
+			<button class="btn btn-secondary" type="button" id="searchNameBtn">
+				<i class="fa fa-search" aria-hidden="true"></i>
+			</button>
+	    </span>
+    </div>
+</div>
+
+<div id="mainContainer" class="container">
+    <div id="mainContainerRepleace" class="row">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th data-field="id">ID</th>
+                <th data-field="content">评论内容</th>
+                <th data-field="createTime">创建时间</th>
+
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="comment: ${commentModel.commentList}">
+                <td th:text="${comment.id}">1</td>
+                <td th:text="${comment.content}">楼主好棒</td>
+                <td th:text="${#dates.format(comment.createTime, 'yyyy-MM-dd HH:mm')}">2018-03-22 16:12</td>
+                <td>
+                    <div>
+                        <a class="blog-delete-comment" role="button" data-th-attr="commentId=${comment.id}">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+        <div th:replace="~{fragments/page :: page}">...</div>
+
+    </div>
+</div>
+<!-- The modal 2-->
+<div class="modal" id="confirmComments" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal2Label">警告</h4>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal2Body">
+                是否删除评论？
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-dismiss="modal" id="submitDeleteComment">确定</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="../../js/comments/main.js" th:src="@{/js/comments/main.js}"></script>
+

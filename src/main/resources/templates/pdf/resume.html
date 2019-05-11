@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>简历生成器</title>
+<meta name="keywords" content="pdf;resume;itext">
+<meta name="description" content="基于iText的PDF简历生成器">
+<meta charset="utf-8">
+<!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<!-- Tether core CSS -->
+<link href="../../css/tether.min.css" th:href="@{/css/tether.min.css}"
+	rel="stylesheet">
+
+<!-- Bootstrap CSS -->
+<link href="../../css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+<!-- Font-Awesome CSS -->
+<link href="../../css/font-awesome.min.css"
+	th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+
+<!-- toastr CSS -->
+<link href="../../css/toastr.min.css" th:href="@{/css/toastr.min.css}"
+	rel="stylesheet">
+
+
+<!-- Custom styles -->
+<link href="../../css/blog.css" th:href="@{/css/blog.css}"
+	rel="stylesheet">
+<link href="../../css/fileinput.min.css"
+	th:href="@{/css/fileinput.min.css}" rel="stylesheet">
+
+<style type="text/css">
+.error {
+	color: red
+}
+
+.kv-avatar .krajee-default.file-preview-frame, .kv-avatar .krajee-default.file-preview-frame:hover
+	{
+	margin: 0;
+	padding: 0;
+	border: none;
+	box-shadow: none;
+	text-align: center;
+}
+
+.kv-avatar {
+	display: inline-block;
+}
+
+.kv-avatar .file-input {
+	display: table-cell;
+	width: 213px;
+}
+
+.kv-reqd {
+	color: red;
+	font-family: monospace;
+	font-weight: normal;
+}
+</style>
+</head>
+<body>
+	<nav
+		class="navbar navbar-inverse bg-inverse navbar-toggleable-sm navbar-toggleable-md">
+		<div class="container col-12 col-sm-12 col-md-12">
+			<div class="navbar-header">
+				<button class="navbar-toggler navbar-toggler-right" type="button"
+					data-toggle="collapse" data-target="#navbarsContainer"
+					aria-controls="navbarsExampleContainer" aria-expanded="true"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon navbar-right "></span>
+				</button>
+				<a class="navbar-brand navbar-left" href="/" th:href="@{/}">Whichard</a>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarsContainer">
+
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item"><a class="nav-link"
+						href="javascript:void(0)" th:attr="url='/blogs?order=new'">最新
+							<span class="sr-only">(current)</span>
+					</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="javascript:void(0)" th:attr="url='/blogs?order=hot'">最热</a>
+					</li>
+					<li class="nav-item">
+						<form class="form-inline mt-2 mt-md-0">
+							<input class="form-control  col-md-8 mr-sm-0" type="text"
+								placeholder="搜索" id="indexkeyword" th:value="${keyword}">
+							<a href="javascript:void(0)"
+								class="btn btn-outline-secondary my-2 my-sm-0" id="indexsearch">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</a>
+						</form>
+					</li>
+					<li class="nav-item dropdown"><a
+						class="dropdown-toggle nav-link" href="javascript:void(0)"
+						data-toggle="dropdown" id="pdf" aria-haspopup="true"
+						aria-expanded="false"><span style="color: red">PDF实验室</span></a>
+						<div class="dropdown-menu"
+							aria-labelledby="navbarDropdownMenuLink">
+							<a class="dropdown-item" href="/u/waylau"
+								th:href="@{'/pdf/resume'}">简历生成器</a>
+							<!--<a class="dropdown-item disable" href="/u/waylau" th:href="@{'/pdf/resume'}">URL转PDF</a>-->
+							<!--<a class="dropdown-item disable" href="/u/waylau" th:href="@{'/pdf/resume'}">PDF拼接</a>-->
+							<!--<a class="dropdown-item disable" href="/u/waylau" th:href="@{'/pdf/resume'}">PDF水印</a>-->
+						</div></li>
+				</ul>
+				<div sec:authorize="isAuthenticated()" class="row">
+					<div class="dropdown">
+						<a class=" dropdown-toggle nav-link btn-outline-success"
+							href="/u/waylau" th:href="@{'/u/' + ${#authentication.name}}"
+							data-toggle="dropdown"><span sec:authentication="name"></span></a>
+						<div class="dropdown-menu">
+							<a class=" dropdown-item" href="/u/waylau"
+								th:href="@{'/u/' + ${#authentication.name}}">个人主页</a> <a
+								class="dropdown-item" href="/u/waylau/profile"
+								th:href="@{'/u/' + ${#authentication.name} + '/profile'}">个人设置</a>
+						</div>
+					</div>
+					<div>
+						<a href="/u/waylau/blogs/edit"
+							th:href="'/u/' + ${#authentication.name} + '/blogs/edit'"
+							class="btn btn-outline-success my-2 my-sm-0"
+							th:if="not ${#strings.contains(#authentication.principal.authorities[0],'ROLE_VISTOR')}">写博客</a>
+					</div>
+					<div>
+						<form action="/logout" th:action="@{/logout}" method="post">
+							<input class="btn btn-outline-success my-2 my-sm-0" type="submit"
+								value="退出">
+						</form>
+					</div>
+				</div>
+
+				<div sec:authorize="isAnonymous()">
+					<a href="/login" class="btn btn-outline-success my-2 my-sm-0"
+						type="submit">登录</a> <a href="/register"
+						class="btn btn-outline-success my-2 my-sm-0" type="submit">注册</a>
+				</div>
+			</div>
+
+		</div>
+	</nav>
+	<!-- Page Content -->
+	<div class="container blog-content">
+		<br>
+		<h1 class="text-center text-danger">简历生成器</h1>
+		<br>
+		<form class="form-horizontal" id="form" method="post">
+			<div class="row">
+				<div class="col-md-8 col-sm-8 col-8">
+					<h3>个人信息</h3>
+					<hr />
+					<div class="form-group row">
+						<label for="name" class="col-md-2 col-sm-2 col-2">姓名：</label>
+						<div class="col-md-5 col-sm-5 col-5">
+							<input class="form-control" id="name" name="name"
+								placeholder="请输入姓名" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="birth" class="col-md-2 col-sm-2 col-2">出生年月：</label>
+						<div class="col-md-5 col-sm-5 col-5">
+							<input class="form-control" type="month" id="birth" name="birth"
+								placeholder="请输入出生年月日">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="telephone" class="col-md-2 col-sm-2 col-2">电话：</label>
+						<div class="col-md-5 col-sm-5 col-5">
+							<input class="form-control" id="telephone" name="telephone"
+								placeholder="请输入电话" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="politics" class="col-md-2 col-sm-2 col-2">政治面貌：</label>
+						<div class="col-md-5 col-sm-5 col-5">
+							<select class="form-control" id="politics" name="politics">
+								<option selected value="群众">群众</option>
+								<option value="共青团员">共青团员</option>
+								<option value="民主党派">民主党派</option>
+								<option value="中共预备党员">中共预备党员</option>
+								<option value="中共党员">中共党员</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="email" class="col-md-2 col-sm-2 col-2">邮箱：</label>
+						<div class="col-md-5 col-sm-5 col-5">
+							<input class="form-control" type="email" id="email" name="email"
+								placeholder="请输入邮箱" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="target" class="col-md-2 col-sm-2 col-2">求职意向：</label>
+						<div class="col-md-5 col-sm-5 col-5">
+							<input class="form-control" id="target" name="target"
+								placeholder="请输入求职意向岗位" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="location" class="col-md-2 col-sm-2 col-2">籍贯：</label>
+						<div class="col-md-5 col-sm-5 col-5">
+							<input class="form-control" id="location" name="location"
+								placeholder="请输入籍贯" />
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-4 col-4 text-center">
+					<div class="kv-avatar">
+						<div class="file-loading">
+							<input id="imgName" name="file" type="file">
+						</div>
+					</div>
+					<div class="kv-avatar-hint">
+						<small>请选择小于1500KB大小的文件，别忘记上传哟~</small>
+					</div>
+				</div>
+			</div>
+			<h3>教育背景</h3>
+			<hr />
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-12" style="margin-left: 10px">
+					<div class="form-group row">
+						<label for="start1" class="col-md-2 col-sm-2 col-2">时间：</label>
+						<div class="col-md-3 col-sm-3 col-3">
+							<input class="form-control" type="month" id="start1"
+								name="start1" />
+						</div>
+						到
+						<div class="col-md-3 col-sm-3 col-3">
+							<input class="form-control" type="month" id="end1" name="end1" />
+						</div>
+						<div
+							class="col-md-1 col-sm-1 col-1 offset-md-2 offset-sm-2 offset-md-2">
+							<button class="btn btn-outline-danger">删除此次经历</button>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="school1" class="col-md-2 col-sm-2 col-2">学校：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<input class="form-control" id="school1" name="school1"
+								placeholder="请输入学校" />
+						</div>
+
+					</div>
+					<div class="form-group row">
+						<label for="major1" class="col-md-2 col-sm-2 col-2">专业：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<input class="form-control" id="major1" name="major1"
+								placeholder="请输入专业" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-12">
+					<button class="btn btn-outline-primary" id="1">新增教育经历</button>
+				</div>
+			</div>
+			<br>
+			<h3>个人技能</h3>
+			<hr />
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-12">
+					<div class="form-group row">
+						<label for="skills" class="col-md-2 col-sm-2 col-2">专业技能：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<textarea class="form-control" id="skills" rows="5" name="skills"
+								placeholder="技能1;&#13;&#10;技能2;&#13;&#10;技能3;&#13;&#10;....不需要缩进"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<h3>实习经历(选填，不填则删除)</h3>
+			<hr />
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-12" style="margin-left: 10px">
+					<div class="form-group row">
+						<label for="practiceStart1" class="col-md-2 col-sm-2 col-2">时间：</label>
+						<div class="col-md-3 col-sm-3 col-3">
+							<input class="form-control" type="month" id="practiceStart1"
+								name="practiceStart1" />
+						</div>
+						到
+						<div class="col-md-3 col-sm-3 col-3">
+							<input class="form-control" type="month" id="practiceEnd1"
+								name="practiceEnd1" />
+						</div>
+						<div
+							class="col-md-1 col-sm-1 col-1 offset-md-2 offset-sm-2 offset-md-2">
+							<button class="btn btn-outline-danger">删除此次实习</button>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="practiceCompany1" class="col-md-2 col-sm-2 col-2">公司：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<input class="form-control" id="practiceCompany1"
+								name="practiceCompany1" placeholder="请输入公司" />
+						</div>
+
+					</div>
+					<div class="form-group row">
+						<label for="practiceDepartment1" class="col-md-2 col-sm-2 col-2">部门：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<input class="form-control" id="practiceDepartment1"
+								name="practiceDepartment1" placeholder="请输入部门" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="praticeDescription1" class="col-md-2 col-sm-2 col-2">实习介绍：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<textarea class="form-control" id="praticeDescription1"
+								name="praticeDescription1" rows="5"
+								placeholder="介绍实习自己做的事情，一段话，不需要换行和缩进"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-12">
+					<button class="btn btn-outline-primary" id="2">新增实习经历</button>
+				</div>
+			</div>
+			<br>
+			<h3>项目经历</h3>
+			<hr />
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-12" style="margin-left: 10px">
+					<div class="form-group row">
+						<label for="projectName1" class="col-md-2 col-sm-2 col-2">项目名称：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<input class="form-control" id="projectName1" name="projectName1"
+								placeholder="请输入项目名称" />
+						</div>
+						<div
+							class="col-md-1 col-sm-1 col-1 offset-md-2 offset-sm-2 offset-md-2">
+							<button class="btn btn-outline-danger">删除此项目</button>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="projectStart1" class="col-md-2 col-sm-2 col-2">时间：</label>
+						<div class="col-md-3 col-sm-3 col-3">
+							<input class="form-control" type="month" id="projectStart1"
+								name="projectStart1" />
+						</div>
+						到
+						<div class="col-md-3 col-sm-3 col-3">
+							<input class="form-control" type="month" id="projectEnd1"
+								name="projectEnd1" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="projectDuty1" class="col-md-2 col-sm-2 col-2">职责：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<select class="form-control" id="projectDuty1"
+								name="projectDuty1">
+								<option selected value="主研">主研</option>
+								<option value="参研">参研</option>
+								<option value="项目负责人员">项目负责人员</option>
+								<option value="项目核心人员">项目核心人员</option>
+							</select>
+						</div>
+
+					</div>
+					<div class="form-group row">
+						<label for="projectIntroduction1" class="col-md-2 col-sm-2 col-2">项目介绍：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<textarea class="form-control" id="projectIntroduction1"
+								name="projectIntroduction1" rows="5" placeholder="一段话，不需要换行和缩进"></textarea>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="projectIntroduction1" class="col-md-2 col-sm-2 col-2">具体工作：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<textarea class="form-control" id="projectJobs1" rows="5"
+								name="projectJobs1"
+								placeholder="工作职责1&#13;&#10;工作职责2&#13;&#10;工作职责2&#13;&#10;....不需要序号和缩进"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-12">
+					<button class="btn btn-outline-primary" id="3">新增项目经历</button>
+				</div>
+			</div>
+			<br>
+			<h3>获得荣誉(选填，不填则删除)</h3>
+			<hr />
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-12" style="margin-left: 10px">
+					<div class="form-group row">
+						<label for="honorYear1" class="col-md-2 col-sm-2 col-2">时间：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<input class="form-control" type="text" id="honorYear1"
+								name="honorYear1" placeholder="输入年份即可，例如:2018年" />
+						</div>
+						<div
+							class="col-md-1 col-sm-1 col-1 offset-md-2 offset-sm-2 offset-md-2">
+							<button class="btn btn-outline-danger">删除此次荣誉</button>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="honorName1" class="col-md-2 col-sm-2 col-2">荣誉：</label>
+						<div class="col-md-6 col-sm-6 col-6">
+							<input class="form-control" id="honorName1" name="honorName1"
+								placeholder="请输入具体荣誉" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-12">
+					<button class="btn btn-outline-primary" id="4">新增荣誉</button>
+				</div>
+			</div>
+			<br>
+			<div class="row justify-content-center">
+				<div class="col-4 col-sm-4 col-md-4">
+					<button type="submit" class="btn btn-primary btn-lg"
+						id="formSubmit">提交</button>
+				</div>
+				<div class="col-4 col-sm-4 col-md-4">
+					<button type="reset" class="btn btn-primary btn-lg" id="formReset">重置</button>
+				</div>
+			</div>
+		</form>
+		<!-- /.row -->
+		<h3>生成结果</h3>
+		<hr>
+		<div class="row justify-content-center">
+			<div class="col-4 col-sm-4 col-md-4">
+				<a href="#" class="btn btn-success btn-lg disabled" id="preview"
+					role="button" target="view_window">预览</a>
+			</div>
+			<div class="col-4 col-sm-4 col-md-4">
+				<a href="#" class="btn btn-success btn-lg disabled" id="download"
+					role="button" target="view_window">下载</a>
+			</div>
+		</div>
+		<br> <br> <br>
+	</div>
+	<!-- /.container -->
+
+	<div th:replace="~{fragments/footer :: footer}">...</div>
+	<script src="../../js/pdf/jquery.validate.min.js"
+		th:src="@{/js/pdf/jquery.validate.min.js}"></script>
+	<script src="../../js/pdf/messages_zh.min.js"
+		th:src="@{/js/pdf/messages_zh.min.js}"></script>
+	<script src="../../js/pdf/fileinput.min.js"
+		th:src="@{/js/pdf/fileinput.min.js}"></script>
+	<script src="../../js/pdf/zh.js" th:src="@{/js/pdf/zh.js}"></script>
+	<script src="../../js/pdf/theme.js" th:src="@{/js/pdf/theme.js}"></script>
+	<script src="../../js/pdf/resume.js" th:src="@{/js/pdf/resume.js}"></script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<link href="../../css/markdown.css" th:href="@{/css/markdown.css}"
+	rel="stylesheet" />
+
+<title th:text="${blogModel.title}+' - Whichard小站'">Whichard小站</title>
+<meta name="keywords" th:content="${blogModel.tags}" />
+<meta name="description" th:content="${blogModel.summary}" />
+<meta charset="utf-8" />
+<!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<!-- CSRF -->
+<meta name="_csrf" th:content="${_csrf.token}" />
+<!-- default header name is X-CSRF-TOKEN -->
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+<!-- Tether core CSS -->
+<link href="../../css/tether.min.css" th:href="@{/css/tether.min.css}"
+	rel="stylesheet" />
+
+<!-- Bootstrap CSS -->
+<link href="../../css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+
+<!-- Font-Awesome CSS -->
+<link href="../../css/font-awesome.min.css"
+	th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+
+<!-- NProgress CSS -->
+<link href="../../css/nprogress.css" th:href="@{/css/nprogress.css}"
+	rel="stylesheet" />
+
+<!-- thinker-md CSS -->
+<link href="../../css/thinker-md.vendor.css"
+	th:href="@{/css/thinker-md.vendor.css}" rel="stylesheet" />
+
+<!-- bootstrap tags CSS -->
+<link href="../../css/bootstrap-tagsinput.css"
+	th:href="@{/css/jquery.tagsinput.min.css}" rel="stylesheet" />
+
+<!-- bootstrap chosen CSS -->
+<link href="../../css/component-chosen.min.css"
+	th:href="@{/css/component-chosen.min.css}" rel="stylesheet" />
+
+<!-- toastr CSS -->
+<link href="../../css/toastr.min.css" th:href="@{/css/toastr.min.css}"
+	rel="stylesheet" />
+
+<!-- jQuery image cropping plugin CSS -->
+<link href="../../css/cropbox.css" th:href="@{/css/cropbox.css}"
+	rel="stylesheet" />
+
+<!-- Custom styles -->
+<link href="../../css/style.css" th:href="@{/css/style.css}"
+	rel="stylesheet" />
+<link href="../../css/thymeleaf-bootstrap-paginator.css"
+	th:href="@{/css/thymeleaf-bootstrap-paginator.css}" rel="stylesheet">
+<link href="../../css/blog.css" th:href="@{/css/blog.css}"
+	rel="stylesheet" />
+</head>
+<body>
+	<div th:replace="~{fragments/header :: header}">...</div>
+	<div class="container blog-content-container">
+
+		<div class="row">
+
+			<!-- Blog Entries Column -->
+			<div class="col-md-9 col-sm-9 col-12">
+
+				<!-- Blog Post -->
+				<div class="card mb-4">
+					<div class="card-block">
+						<h2 class="card-title">
+							<span> <a href="/u/waylau" title="waylau"
+								th:href="'/u/' + ${blogModel.user.username}"
+								th:title="${blogModel.user.username}"> <img
+									src="/images/avatar-defualt.jpg"
+									th:src="${blogModel.user.avatar} == null ? '/images/avatar-defualt.jpg' : ${blogModel.user.avatar}"
+									class="blog-avatar-50">
+							</a>
+							</span> <a href="/u/waylau/blogs/1" class="card-link blog-title"
+								title="waylau"
+								th:href="'/u/' + ${blogModel.user.username} + '/blogs/'+ ${blogModel.id}"
+								th:title="${blogModel.user.username}"> <span
+								style="color: #ff0000" th:if="${blogModel.priority}">[置顶]</span>[[${blogModel.title}]]
+							</a>
+						</h2>
+						<div class="card-text">
+							<a href="/u/waylau" th:href="'/u/' + ${blogModel.user.username}"
+								class="card-link blog-author"
+								th:text="${blogModel.user.username}">waylau</a> 发表于
+							[[${#dates.format(blogModel.createTime, 'yyyy-MM-dd HH:mm')}]]
+							<!--阅读数，点赞量评论量-->
+							<span
+								th:class="${isBlogOwner}?'':'fr'"> <i class="fa fa-eye"
+								aria-hidden="true">[[${readSize}]]</i> <i
+								class="fa fa-thumbs-o-up" aria-hidden="true">[[${likeCount}]]</i>
+								<i class="fa fa-comment-o" aria-hidden="true">[[${blogModel.commentSize}]]</i>
+							</span>
+
+							<a href="/u/waylau" th:if="${isBlogOwner}"
+								th:href="'/u/' + ${blogModel.user.username}+ '/blogs/edit/'+ ${blogModel.id}"
+								class="btn btn-primary float-right">编辑</a> <a
+								href="javascript:void(0)" th:if="${isBlogOwner}"
+								class="btn btn-primary float-right blog-delete-blog">删除</a>
+						</div>
+						<hr>
+						<article class="post-content" th:utext="${blogModel.htmlContent}">
+
+						</article>
+						<hr>
+					</div>
+					<div class="card-block">
+
+
+						<h5>
+							分类：<a
+								th:href="'/u/'+${blogModel.user.username} + '/blogs?catalog='+${blogModel.catalog.id} "
+								th:text="${blogModel.catalog.name}" class="blog-title">
+								Spring Data </a>
+						</h5>
+						<h5>
+							标签： <a
+								th:each="tag : ${#strings.arraySplit(blogModel.tags , ',')}"
+								th:href="'/u/' + ${blogModel.user.username}  + '/blogs?keyword='+ ${tag}">
+								<span class="badge badge-default" th:text="${tag}">Web
+									Design</span>
+							</a>
+						</h5>
+						<h5>
+							分享至：
+							<div id="soshid" class="pull-right"></div>
+						</h5>
+					</div>
+
+					<div class="card-block comments">
+						<h5>评论：</h5>
+						<div class="row">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+								<textarea class="blog-textarea" placeholder="看帖需留言~"
+									id="commentContent"></textarea>
+							</div>
+						</div>
+						<button class="btn btn-primary float-right" id="submitComment">发表评论</button>
+
+						<button class="btn btn-primary float-right"
+								th:if="${isLiked} eq 0" id="submitLike2">Like</button>
+						<button class="btn btn-primary float-right btn-lg active" th:if="${isLiked} gt 0"
+								th:attr="userId=${userId}" id="cancelLike">Like
+						</button>
+
+					</div>
+					<div class="card-block" id="mainContainer">
+
+						<div class="row" id="mainContainerRepleace"
+							th:each="comment,commentStat : ${comments}"
+							th:object="${comment}">
+							<h2 class="card-title col-lg-1 col-md-2 col-sm-2 col-2">
+								<span> <a href="/u/waylau"
+									th:href="'/u/'+ *{user.username}" title="waylau"
+									th:title="*{user.username}"> <img
+										src="/images/avatar-defualt.jpg"
+										th:src="*{user.avatar} == null ? '/images/avatar-defualt.jpg' : *{user.avatar}"
+										class="blog-avatar-50">
+								</a>
+								</span>
+							</h2>
+							<div class="card-text col-lg-11 col-md-10 col-sm-10 col-10">
+								<a href="/u/waylau" th:href="'/u/'+ *{user.username}"
+									class="card-link  blog-author" th:text="*{user.username}">waylau</a>
+								[[${commentStat.index} + 1]]楼
+								[[${#dates.format(comment.createTime, 'yyyy-MM-dd HH:mm')}]]
+								<!--删除评论-->
+								<a
+									href="javascript:void(0)" class="blog-delete-comment"
+									th:if="${commentOwner} eq *{user.username} or ${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+									th:attr="commentId=*{id}"><i class="fa fa-trash-o"
+									aria-hidden="true"></i></a>
+								<!--评论点赞-->
+								<a
+										href="javascript:void(0)" class="blog-like-comment"
+										th:attr="commentId=*{id}"><i class="fa fa-thumbs-o-up"
+																	 aria-hidden="true"></i></a>
+								<p th:text="*{content}">不错哦，顶起！</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- 右侧栏目 -->
+			<div class="col-md-3 col-sm-3 d-none d-sm-block">
+				<div>
+					<!-- 文章目录 -->
+					<div class="card  blog-catalog">
+						<h5 class="card-header">
+							<i class="fa fa-bars" aria-hidden="true"></i> 文章目录
+						</h5>
+						<div class="card-block">
+							<div class="row">
+								<div id="catalog" class="col-lg-12 col-sm-12 col-12"></div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+		<!-- /.row -->
+
+	</div>
+	<!-- /.container -->
+
+
+	<div th:replace="~{fragments/footer :: footer}">...</div>
+
+	<!-- JavaScript -->
+	<script th:inline="javascript">
+    var blogId = [[${blogModel.id}]];
+    var blogUrl = '/u/' + [[${blogModel.user.username}]] + '/blogs/' + [[${blogModel.id}]];
+    var isAnonymous = [[${#authorization.expression('hasRole(''ROLE_ANONYMOUS'')')}]];
+    var blogTitle = 'www.whichard.cn/' + [[${blogModel.title}]];
+    var blogSummary = [[${blogModel.summary}]];
+    var picture = 'www.whichard.cn/' + '/images/website.png';  //TODO
+
+    //社交分享
+    sosh('#soshid', {
+        // 分享的链接，默认使用location.href
+        url: window.location.href,
+        // 分享的标题，默认使用document.title
+        title: blogTitle,
+        // 分享的摘要，默认使用<meta name="description" content="">content的值
+        digest: blogSummary,
+        // 分享的图片，默认获取本页面第一个img元素的src
+        pic: picture,
+        // 选择要显示的分享站点，顺序同sites数组顺序，
+        // 支持设置的站点有weixin,yixin,weibo,qzone,tqq,douban,renren,tieba
+        // sites: ['weixin', 'weibo', 'yixin', 'qzone', 'tqq', 'douban', 'renren', 'tieba']
+        sites: ['weixin', 'weibo', 'qzone', 'douban']
+    })
+</script>
+
+
+	<script src="../../js/userspace/blog.js"
+		th:src="@{/js/userspace/blog.js}"></script>
+</body>
+</html>

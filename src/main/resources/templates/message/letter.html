@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>站内信</title>
+</head>
+<body>
+<!--<header th:replace="header :: header"></header>-->
+<head th:replace="~{fragments/header :: header}"></head>
+
+<div class="col-md-12 col-sm-12 d-none d-sm-block">
+    <div class="card mb-4 blog-list-container" th:each="conversation : ${conversations}">
+        <div class="card-block">
+
+            <h2 class="card-title">
+                <a class="list-head" th:if="${conversation.get('user') ne null}" th:href="'/u/'+${conversation.get('user').getUsername()}  + '/blogs'">
+                    <img width="100%" alt="头像" th:src="${conversation.get('user').getHeadUrl()}">
+                </a>
+                <a class="list-head" th:if="${conversation.get('user') eq null}">
+                    <img width="100%" alt="头像">
+                </a>
+                <a href="/u/wqe"
+                   th:href="'/msg/detail?conversationId='+${conversation.get('conversation').getConversationId()}">
+                </a>
+                <a th:href="'/msg/detail?conversationId='+${conversation.get('conversation').getConversationId()}"  th:text="'共'+${conversation.get('conversationsCount')}+'条会话'">
+                    共$!{conversation.conversation.id}条会话
+                </a>
+            </h2>
+            <p class="card-text blog-summary" th:text="${conversation.get('conversation').getContent()}"></p>
+            <div class="card-text">
+                由[[${conversation.get('user').getUsername()}]]创建于 [[${#dates.format(conversation.get('conversation').getCreatedDate(), 'yyyy-MM-dd HH:mm')}]]
+            </div>
+        </div>
+    </div>
+
+    <!--                <div th:replace="~{fragments/page :: page}">...</div>-->
+</div>
+
+
+
+
+
+
+<!--<footer th:replace="~{fragments/footer :: footer}"></footer>-->
+</body>
+</html>

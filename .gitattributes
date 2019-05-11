@@ -1,0 +1,3 @@
+*.js linguist-language=java
+*.css linguist-languag=java
+*.html linguist-language=java
