@@ -1,38 +1,38 @@
 package com.whichard.spring.boot.blog.service;
 
 import com.whichard.spring.boot.blog.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.whichard.spring.boot.blog.domain.Vote;
+import com.whichard.spring.boot.blog.repository.VoteRepository;
 
 import java.util.List;
 
 /**
- * Vote 服务接口.
+ * Vote 服务实现.
  *
  * @author <a href="http://www.whichard.cn">Whichard</a>
- * @since 1.0.0 2018年4月9日
+ * @since 1.0.0 2018年6月6日
  */
-public interface VoteService {
-    /**
-     * 根据id获取 Vote
-     *
-     * @param id
-     * @return
-     */
-    Vote getVoteById(Long id);
+@Service
+public class VoteService {
 
-    /**
-     * 删除Vote
-     *
-     * @param id
-     * @return
-     */
-    void removeVote(Long id);
+    @Autowired
+    private VoteRepository voteRepository;
 
-    /**
-     * 根据用户列举点赞
-     *
-     * @param user
-     * @return
-     */
-    List<Vote> listVote(User user);
+
+    public Vote getVoteById(Long id) {
+        return voteRepository.findOne(id);
+    }
+
+
+    public void removeVote(Long id) {
+        voteRepository.delete(id);
+    }
+
+
+    public List<Vote> listVote(User user) {
+        return voteRepository.findByUser(user);
+    }
 }

@@ -1,0 +1,83 @@
+<div class="card-header bg-dark font-white">
+
+    <div class="input-group col-md-7 col-xl-7 col-sm-7 col-7 ">
+
+        <input type="text" class="form-control" id="searchName"
+               placeholder="输入博文标题进行搜索"> <span class="input-group-btn">
+			<button class="btn btn-secondary" type="button" id="searchNameBtn">
+				<i class="fa fa-search" aria-hidden="true"></i>
+			</button>
+            </span>
+        <button class="btn btn-primary" type="button" id="refreshBlogES">
+            刷新ES
+        </button>
+        </span>
+    </div>
+</div>
+
+<div id="mainContainer" class="container">
+    <div id="mainContainerRepleace" class="row">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th data-field="id">ID</th>
+                <th data-field="title">博客标题</th>
+                <th data-field="title">作者名</th>
+                <th data-field="title">作者ID</th>
+                <th data-field="voteSize">阅读数</th>
+                <th data-field="voteSize">点赞数</th>
+                <th data-field="commentSize">评论数</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="blog: ${blogModel.blogList}">
+                <td th:text="${blog.id}">1</td>
+                <td><a th:href="'/u/'+${blog.user.username}+'/blogs/'+${blog.id}" th:text="${blog.title}">
+                    <span style="color: #ff0000" th:if="${blog.priority}>0">[置顶]</span>java第一章</a></td>
+                <td th:text="${blog.user.username}">admin</td>
+                <td th:text="${blog.user.id}">5</td>
+                <td th:text="${blog.readSize}">5</td>
+                <td th:text="${blog.voteSize}">5</td>
+                <td th:text="${blog.commentSize}">5</td>
+                <td>
+                    <div>
+                        <a class="blog-delete-blog" role="button" data-th-attr="blogId=${blog.id}">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+        <div th:replace="~{fragments/page :: page}">...</div>
+
+    </div>
+</div>
+<!-- The modal 2-->
+<div class="modal" id="confirmBlogs" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal2Label">警告</h4>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal2Body">
+                是否删除博文已经相关信息？
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-dismiss="modal" id="submitDeleteBlog">确定</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="../../js/blogs/main.js" th:src="@{/js/blogs/main.js}"></script>

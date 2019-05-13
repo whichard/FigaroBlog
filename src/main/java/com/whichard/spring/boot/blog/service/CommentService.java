@@ -2,48 +2,41 @@ package com.whichard.spring.boot.blog.service;
 
 import com.whichard.spring.boot.blog.domain.Comment;
 import com.whichard.spring.boot.blog.domain.User;
+import com.whichard.spring.boot.blog.repository.CommentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Comment Service接口.
+ * Comment Service接口实现.
  *
  * @author <a href="http://www.whichard.cn">Whichard</a>
  * @since 1.0.0 2018年6月6日
  */
-public interface CommentService {
+@Service
+public class CommentService{
 
-    /**
-     * 根据id获取 Comment
-     *
-     * @param id
-     * @return
-     */
-    Comment getCommentById(Long id);
+    @Autowired
+    private CommentRepository commentRepository;
 
-    /**
-     * 删除评论
-     *
-     * @param id
-     * @return
-     */
-    void removeComment(Long id);
+    public Comment getCommentById(Long id) {
+        return commentRepository.findOne(id);
+    }
 
-    /**
-     * 根据用户列举评论
-     *
-     * @param user
-     * @return
-     */
-    List<Comment> listComments(User user);
+    public void removeComment(Long id) {
+        commentRepository.delete(id);
+    }
 
-    /**
-     * 根据评论内容进行分页模糊查询
-     *
-     * @param
-     * @return
-     */
-    Page<Comment> listUsersByContentLike(String content, Pageable pageable);
+
+    public List<Comment> listComments(User user) {
+        return commentRepository.findByUser(user);
+    }
+
+    public Page<Comment> listUsersByContentLike(String content, Pageable pageable) {
+        content = "%" + content + "%";
+        return commentRepository.findByContentLike(content, pageable);
+    }
 }

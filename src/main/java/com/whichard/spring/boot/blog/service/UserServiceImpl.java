@@ -7,10 +7,7 @@ import javax.transaction.Transactional;
 
 import com.whichard.spring.boot.blog.config.CustomPasswordEncoder;
 import com.whichard.spring.boot.blog.domain.*;
-import com.whichard.spring.boot.blog.repository.BlogRepository;
-import com.whichard.spring.boot.blog.repository.CommentRepository;
 import com.whichard.spring.boot.blog.repository.UserRepository;
-import com.whichard.spring.boot.blog.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

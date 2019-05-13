@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <link rel="stylesheet" href="../../../css/style.css" />
+    <link rel="stylesheet" href="../../../css/editormd.css" />
+</head>
+<body>
+<style type="text/css">
+
+    @import "/css/emoji/nature.css";
+    @import "/css/emoji/object.css";
+    @import "/css/emoji/people.css";
+    @import "/css/emoji/place.css";
+    @import "/css/emoji/Sysmbols.css";
+    @import "/css/emoji/twemoji.css";
+
+</style>
+<div th:replace="~{fragments/header :: header}"></div>
+<!-- Page Content -->
+<div class="container blog-content-container">
+
+    <div class="row">
+
+        <!-- Blog Entries Column-->
+        <div class="col-md-12 col-sm-12 col-12">
+
+            <!-- Blog Post -->
+            <div class="card mb-12">
+                <div class="card-block" th:object="${blogModel.blog}">
+                    <input type="hidden" name="id" th:value="*{id}" id="blogId">
+                    <input type="text" class="form-control" placeholder="请填写博客标题" id="title" name="title"
+                           th:value="*{title}" maxlength="50">
+
+                    <textarea class="blog-textarea" placeholder="请填写博客摘要,留空则自动生成" id="summary" name="summary"
+                              th:text="*{summary}" maxlength="300"></textarea>
+
+                    <hr>
+
+                    <!--<textarea id="md" data-provide="markdown" data-hidden-buttons="cmdImage" name="content"
+                              th:text="*{content}"></textarea>-->
+
+                    <div id="test-editormd">
+            <textarea id="md" style="display:none;" name="content" th:text="*{content}">
+</textarea>
+                    </div>
+
+                    <hr>
+                    <!-- 右侧栏目 -->
+                    <div class="col-md-12 col-sm-12 col-12">
+                        <div>
+
+                            <!-- 图片上传 -->
+                            <div class="card ">
+                                <h5 class="card-header"><i class="fa fa-file-image-o" aria-hidden="true"></i> 图片上传</h5>
+                                <div class="card-block">
+                                    <div class="row mt-1">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+
+                                            <form enctype="multipart/form-data" id="uploadformid">
+                                                <input type="file" name="file" accept="image/png,image/gif,image/jpeg" id="file">
+                                                <button class="btn btn-primary float-right" type="button" id="uploadImage">插入
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- 博客设置 -->
+                            <div class="card ">
+                                <h5 class="card-header"><i class="fa fa-cog" aria-hidden="true"></i> 博客设置</h5>
+                                <div class="card-block">
+                                    <div class="row mt-1">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                            标签：<input type="text" class="form-control form-control-tag"
+                                                      th:value="${blogModel.blog.tags}">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                            分类：<select id="catalogSelect" class="form-control form-control-chosen"
+                                                       data-placeholder="请选择">
+                                            <option th:value="*{id}" th:text="*{name}" th:each="catalog : ${blogModel.catalogs}"
+                                                    th:object="${catalog}" th:selected="${catalog  eq blogModel.blog.catalog }">Java
+                                            </option>
+                                        </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <button class="btn btn-primary float-right" id="submitBlog"
+                                                    th:attr="userName=${#authentication.name}">发布
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->
+
+
+<div th:replace="~{fragments/footer :: footer}">...</div>
+
+
+<!-- JavaScript -->
+<script th:inline="javascript">
+    var fileServerUrl = [[${blogModel.fileServerUrl}]];
+</script>
+<!--<script src="../../js/thinker-md.vendor.min.js" th:src="@{/js/thinker-md.vendor.min.js}"></script>-->
+<script src="../../js/userspace/blogedit.js" th:src="@{/js/userspace/blogedit.js}"></script>
+
+<!--<script src="js/jquery.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>-->
+<script src="../editormd.min.js" th:src="@{/js/editormd.min.js}"></script>
+<script type="text/javascript">
+    var testEditor;
+    // 获取 CSRF Token
+    var csrfToken = $("meta[name='_csrf']").attr("content");
+    var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+    $(function() {
+        testEditor = editormd("test-editormd", {
+            width   : "90%",
+            height  : 640,
+            syncScrolling : "single",
+
+            //启动本地图片上传功能
+            imageUpload: true,
+            imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL : "../../../upload/", //文件提交请求路径
+
+            path    : "../../../lib/"
+        });
+    });
+</script>
+</body>
+</html>

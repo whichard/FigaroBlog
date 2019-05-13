@@ -3,15 +3,12 @@ package com.whichard.spring.boot.blog.controlller;
 import java.util.List;
 
 import com.whichard.spring.boot.blog.domain.Blog;
-import com.whichard.spring.boot.blog.domain.Comment;
 import com.whichard.spring.boot.blog.service.BlogService;
 import com.whichard.spring.boot.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

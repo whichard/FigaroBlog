@@ -46,6 +46,11 @@ public class MainController {
         return "redirect:/blogs";
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "test";
+    }
+
     @GetMapping("/login")
     public String login() {
         if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()

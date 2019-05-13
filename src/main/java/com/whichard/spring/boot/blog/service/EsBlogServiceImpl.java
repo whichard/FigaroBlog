@@ -170,7 +170,7 @@ public class EsBlogServiceImpl implements EsBlogService {
                 .addAggregation(terms("users").field("username").order(Terms.Order.count(false)).size(12))
                 .build();
         // when
-        Aggregations aggregations = elasticsearchTemplate.query(searchQuery, new ResultsExtractor<Aggregations>() {
+            Aggregations aggregations = elasticsearchTemplate.query(searchQuery, new ResultsExtractor<Aggregations>() {
             @Override
             public Aggregations extract(SearchResponse response) {
                 return response.getAggregations();

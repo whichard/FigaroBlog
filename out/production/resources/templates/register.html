@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}">
+</head>
+<body>
+
+	<br>
+	<br>
+	<br>
+	<div class="container blog-content-container">
+
+		<form th:action="@{~/register}" method="post" id="registerForm">
+			<h2 class="form-signin-heading">注册即可评论和点赞，还可以向网站管理员申请成为博主</h2>
+			<br> <br>
+			<div class="form-group col-8 col-md-6 col-md-6">
+				<label for="username" class="col-form-label">账号</label> <input
+					type="text" class="form-control" id="username" name="username"
+					maxlength="50" placeholder="请输入账号，至少3个字符，至多20个">
+
+			</div>
+			<div class="form-group col-8 col-md-6 col-md-6">
+				<label for="email" class="col-form-label">邮箱</label> <input
+					type="email" class="form-control" id="email" name="email"
+					maxlength="50" placeholder="请输入邮箱">
+			</div>
+			<div class="form-group col-8 col-md-6 col-md-6">
+				<label for="name" class="col-form-label">昵称</label> <input
+					type="text" class="form-control" id="name" name="name"
+					maxlength="20" placeholder="请输入昵称，至少2个字符，至多20个，推荐和账号相同">
+			</div>
+			<div class="form-group col-8 col-md-6 col-md-6">
+				<label for="password" class="col-form-label">密码</label> <input
+					type="password" class="form-control" id="password" name="password"
+					maxlength="30" placeholder="请输入密码，字母或特殊符号和数字结合">
+			</div>
+			<br>
+			<div class="form-group col-8 col-md-6 col-md-6">
+				<button type="button" class="btn btn-primary" id="submit">提交</button>
+			</div>
+
+		</form>
+
+	</div>
+	<!-- /container -->
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div th:replace="~{fragments/footer :: footer}">...</div>
+</body>
+<script src="../../js/users/main.js" th:src="@{/js/register.js}"></script>
+</html>

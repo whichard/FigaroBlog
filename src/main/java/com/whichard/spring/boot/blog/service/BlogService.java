@@ -1,144 +1,177 @@
 package com.whichard.spring.boot.blog.service;
 
+import javax.transaction.Transactional;
+
 import com.whichard.spring.boot.blog.domain.Catalog;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import com.whichard.spring.boot.blog.domain.Blog;
+import com.whichard.spring.boot.blog.domain.Comment;
 import com.whichard.spring.boot.blog.domain.User;
+import com.whichard.spring.boot.blog.domain.Vote;
+import com.whichard.spring.boot.blog.domain.es.EsBlog;
+import com.whichard.spring.boot.blog.repository.BlogRepository;
 
-import java.util.List;
+import java.util.*;
 
 /**
- * Blog 服务接口.
+ * Blog 服务.
  *
  * @author <a href="http://www.whichard.cn">Whichard</a>
  * @since 1.0.0 2018年4月7日
  */
-public interface BlogService {
-    /**
-     * 保存Blog
-     *
-     * @param blog
-     * @return
-     */
-    Blog saveBlog(Blog blog);
+@Service
+public class BlogService {
 
-    /**
-     * 删除Blog
-     *
-     * @param id
-     * @return
-     */
-    void removeBlog(Long id);
+    @Autowired
+    private EsBlogService esBlogService;
 
-    /**
-     * 根据id获取Blog
-     *
-     * @param id
-     * @return
-     */
-    Blog getBlogById(Long id);
+    @Autowired
+    private BlogRepository blogRepository;
 
-    /**
-     * 根据用户进行博客名称分页模糊查询（最新）
-     *
-     * @param user
-     * @return
-     */
-    Page<Blog> listBlogsByTitleVote(User user, String title, Pageable pageable);
+    @Autowired
+    private CommentService commentService;
 
-    /**
-     * 根据用户进行博客名称分页模糊查询（最热）
-     *
-     * @param user
-     * @return
-     */
-    Page<Blog> listBlogsByTitleVoteAndSort(User user, String title, Pageable pageable);
+    @Autowired
+    private VoteService voteService;
 
-    /**
-     * 阅读量递增
-     *
-     * @param id
-     */
-    void readingIncrease(Long id);
+    @Autowired
+    private SensitiveService sensitiveService;
 
-    /**
-     * 发表评论
-     *
-     * @param blogId
-     * @param commentContent
-     * @return
-     */
-    Blog createComment(Long blogId, String commentContent);
+    @Autowired
+    private RedisCountService redisCountService;
 
-    /**
-     * 删除评论
-     *
-     * @param blogId
-     * @param commentId
-     * @return
-     */
-    void removeComment(Long blogId, Long commentId);
+    @Transactional
+    public Blog saveBlog(Blog blog) {
+        boolean isNew = (blog.getId() == null);
+        EsBlog esBlog = null;
 
-    /**
-     * 点赞
-     *
-     * @param blogId
-     * @return
-     */
-    Blog createVote(Long blogId);
+        Blog returnBlog = blogRepository.save(blog);
 
-    /**
-     * 取消点赞
-     *
-     * @param blogId
-     * @param voteId
-     * @return
-     */
-    void removeVote(Long blogId, Long voteId);
+        if (isNew) {
+            esBlog = new EsBlog(returnBlog);
+        } else {
+            esBlog = esBlogService.getEsBlogByBlogId(blog.getId());
+            esBlog.setReadSize((int)redisCountService.getReadSize(blog.getId()));
+            esBlog.update(returnBlog);
+        }
 
-    /**
-     * 根据分类进行查询
-     *
-     * @param catalog
-     * @param pageable
-     * @return
-     */
-    Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable);
+        esBlogService.updateEsBlog(esBlog);
+        return returnBlog;
+    }
 
-    /**
-     * 根据catalog列举博客
-     *
-     * @return
-     */
-    List<Blog> listBlogs(Catalog catalog);
+    @Transactional
+    public void removeBlog(Long id) {
+        blogRepository.delete(id);
+        EsBlog esblog = esBlogService.getEsBlogByBlogId(id);
+        esBlogService.removeEsBlog(esblog.getId());
+    }
 
-    /**
-     * 根据commentId删除相应comment
-     *
-     * @param commentId
-     */
-    void removeComment(Long commentId);
 
-    /**
-     * 根据voteId删除相应vote
-     *
-     * @param voteId
-     */
-    void removeVote(Long voteId);
+    public Blog getBlogById(Long id) {
+        return blogRepository.findOne(id);
+    }
 
-    /**
-     * 根据标题进行博客标题查询
-     *
-     * @param title
-     * @param pageable
-     * @return
-     */
-    Page<Blog> listBlogsByTitle(String title, Pageable pageable);
 
-    /**
-     * 同步博客到ElasticSearch,解决数据库还原后首页显示错误
-     */
-    void refreshES();
+    public Page<Blog> listBlogsByTitleVote(User user, String title, Pageable pageable) {
+        // 模糊查询
+        title = "%" + title + "%";
+        String tags = title;
+        Page<Blog> blogs = blogRepository.findByTitleLikeAndUserOrTagsLikeAndUserOrderByPriorityDescCreateTimeDesc(title, user, tags, user, pageable);
+        return blogs;
+    }
+
+
+    public Page<Blog> listBlogsByTitleVoteAndSort(User user, String title, Pageable pageable) {
+        // 模糊查询
+        title = "%" + title + "%";
+        Page<Blog> blogs = blogRepository.findByUserAndTitleLike(user, title, pageable);
+        return blogs;
+    }
+
+
+    public void readingIncrease(Long id) {
+        Blog blog = blogRepository.findOne(id);
+        blog.setReadSize(blog.getReadSize() + 1); // 在原有的阅读量基础上递增1
+        this.saveBlog(blog);
+    }
+
+    public Blog createComment(Long blogId, String commentContent) {
+        Blog originalBlog = blogRepository.findOne(blogId);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Comment comment = new Comment(user, commentContent);
+        originalBlog.addComment(comment);
+        return this.saveBlog(originalBlog);
+    }
+
+    public void removeComment(Long blogId, Long commentId) {
+        Blog originalBlog = blogRepository.findOne(blogId);
+        originalBlog.removeComment(commentId);
+        this.saveBlog(originalBlog);
+    }
+
+    public Blog createVote(Long blogId) {
+        Blog originalBlog = blogRepository.findOne(blogId);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Vote vote = new Vote(user);
+        boolean isExist = originalBlog.addVote(vote);
+        if (isExist) {
+            throw new IllegalArgumentException("您已经点过赞了哟~");
+        }
+        return this.saveBlog(originalBlog);
+    }
+
+    public void removeVote(Long blogId, Long voteId) {
+        Blog originalBlog = blogRepository.findOne(blogId);
+        originalBlog.removeVote(voteId);
+        this.saveBlog(originalBlog);
+    }
+
+    public Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable) {
+        Page<Blog> blogs = blogRepository.findByCatalog(catalog, pageable);
+        return blogs;
+    }
+
+    public List<Blog> listBlogs(Catalog catalog) {
+        return blogRepository.findByCatalog(catalog);
+    }
+
+    public void removeComment(Long commentId) {
+        Comment comment = commentService.getCommentById(commentId);
+        List<Comment> comments = new ArrayList<>();
+        comments.add(comment);
+        List<Blog> blogs = blogRepository.findByComments(comments);
+        for (Blog blog : blogs) {
+            this.removeComment(blog.getId(), commentId);
+        }
+    }
+
+    public void removeVote(Long voteId) {
+        Vote vote = voteService.getVoteById(voteId);
+        List<Vote> votes = new ArrayList<>();
+        votes.add(vote);
+        List<Blog> blogs = blogRepository.findByVotes(votes);
+        for (Blog blog : blogs) {
+            this.removeVote(blog.getId(), voteId);
+        }
+    }
+
+    public Page<Blog> listBlogsByTitle(String title, Pageable pageable) {
+        title = "%" + title + "%";
+        return blogRepository.findByTitleLike(title, pageable);
+    }
+
+    public void refreshES() {
+        esBlogService.removeAllEsBlog();
+        String title = "%%";
+        List<Blog> blogs = blogRepository.findByTitleLike(title);
+        for (Blog blog : blogs) {
+            EsBlog esBlog = new EsBlog(blog);
+            esBlogService.updateEsBlog(esBlog);
+        }
+    }
 }

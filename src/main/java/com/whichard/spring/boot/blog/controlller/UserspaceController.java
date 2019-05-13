@@ -11,10 +11,8 @@ import java.util.concurrent.ConcurrentMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.HTMLDocument;
 import javax.validation.ConstraintViolationException;
 
-import com.whichard.spring.boot.blog.config.CustomPasswordEncoder;
 import com.whichard.spring.boot.blog.domain.Blog;
 import com.whichard.spring.boot.blog.domain.Catalog;
 import com.whichard.spring.boot.blog.domain.User;
@@ -22,7 +20,6 @@ import com.whichard.spring.boot.blog.repository.CatalogRepository;
 import com.whichard.spring.boot.blog.repository.UserRepository;
 import com.whichard.spring.boot.blog.service.*;
 import com.whichard.spring.boot.blog.util.IpUtil;
-import com.whichard.spring.boot.blog.util.RedisKeyUtil;
 import com.whichard.spring.boot.blog.util.ToutiaoUtil;
 import com.whichard.spring.boot.blog.vo.BlogIPVO;
 import org.hibernate.engine.jdbc.StreamUtils;
@@ -39,8 +36,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +47,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.whichard.spring.boot.blog.domain.Vote;
 import com.whichard.spring.boot.blog.util.ConstraintViolationExceptionHandler;
 import com.whichard.spring.boot.blog.vo.Response;
-import org.thymeleaf.util.DateUtils;
 
 /**
  * 用户主页控制器.
@@ -69,7 +63,7 @@ public class UserspaceController {
     private UserService userService;
 
     @Autowired
-    private BlogService blogService;
+    BlogService blogService;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -319,6 +313,7 @@ public class UserspaceController {
         }
 
         model.addAttribute("currentVote", currentVote);
+        //currentVote.getId()
         model.addAttribute("isBlogOwner", isBlogOwner);
         model.addAttribute("blogModel", blog);
         //当前like数
