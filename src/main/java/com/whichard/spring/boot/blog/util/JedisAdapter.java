@@ -35,6 +35,23 @@ public class JedisAdapter implements InitializingBean {
         pool = new JedisPool("redis://localhost:6379/10");
     }
 
+    public long expireInTime(String key, int period) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            jedis.set(key, "1");
+            jedis.expire(key, period);//3 * 60 * 60);
+            return 1;
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
     public long incr(String key) {
         Jedis jedis = null;
         try {

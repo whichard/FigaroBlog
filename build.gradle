@@ -94,7 +94,9 @@ dependencies {
 	// 该依赖对于编译测试是必须的，默认包含编译产品依赖和编译时依
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 
-	implementation 'redis.clients:jedis:3.1.0-m1'
+	// https://mvnrepository.com/artifact/redis.clients/jedis
+	compile group: 'redis.clients', name: 'jedis', version: '3.0.1'
+
 
 	implementation 'com.alibaba:fastjson:1.2.57'
 

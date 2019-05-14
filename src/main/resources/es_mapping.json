@@ -51,9 +51,6 @@
         },
         "priority": {
           "type": "integer"
-        },
-        "suggest": {
-          "type": "completion"
         }
       }
     }

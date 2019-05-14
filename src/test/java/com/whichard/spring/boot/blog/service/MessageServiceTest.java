@@ -25,7 +25,7 @@ public class MessageServiceTest {
                 Message message = new Message();
                 message.setContent("hello" + i + "from" + (j));
                 message.setFromId(i);
-                message.setToId(j);
+                message.setToId(1);
                 message.setHasRead(0);
                 messageService.addMessage(message);
             }

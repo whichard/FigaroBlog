@@ -10,6 +10,11 @@ public class RedisKeyUtil {
     private static String BIZ_DISLIKE = "DISLIKE";
     private static String BIZ_EVENTQUEUE = "EVENT_QUEUE";
     private static String READ_SIZE = "READ_SIZE";
+    private static String IP_COUNT = "IP_COUNT";
+
+    public static String getIpKey(long blogId, String ip) {
+        return IP_COUNT + SPLIT + String.valueOf(blogId) + SPLIT + ip;
+    }
 
     public static String getLikeKey(int entityType, long entityId) {
         return BIZ_LIKE + SPLIT + String.valueOf(entityType) + SPLIT + String.valueOf(entityId);

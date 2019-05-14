@@ -21,7 +21,6 @@ import com.whichard.spring.boot.blog.repository.UserRepository;
 import com.whichard.spring.boot.blog.service.*;
 import com.whichard.spring.boot.blog.util.IpUtil;
 import com.whichard.spring.boot.blog.util.ToutiaoUtil;
-import com.whichard.spring.boot.blog.vo.BlogIPVO;
 import org.hibernate.engine.jdbc.StreamUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,16 +90,6 @@ public class UserspaceController {
 
     @Value("${file.server.url}")
     private String fileServerUrl;
-
-    //记录当前时间，防止用户多次提交暴涨访问量 单例模式 共享变量
-    private Date currentDate = new Date();
-
-    //记录每个ip的每天的访问量，第二天清空 单例模式 共享变量
-    private ConcurrentMap<BlogIPVO, Integer> ipMapsCounts = new ConcurrentHashMap<>();
-
-    @Value(("${blog.readingMax.perhour}"))
-    private Integer readingMax;
-
 
     /**
      * 用户的主页
@@ -469,57 +458,17 @@ public class UserspaceController {
         }
     }
 
-    //以下三个函数：判定当前访问IP是否在一个小时内访问过
-    public boolean readingIsMax(Long id) {
-        Date date = new Date();
+    //判定当前访问IP是否在一个小时内访问过
+    public boolean readingIsMax(Long blogId) {
+        //Date date = new Date();
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         String ip = IpUtil.getClinetIpByReq(request);
-        BlogIPVO blogIPVO = new BlogIPVO(id, ip);
-//        if (org.apache.commons.lang.time.DateUtils.isSameDay(date, currentDate)) {
-        if (isSameHour(date, currentDate)) {
-            if (ipMapsCounts.containsKey(blogIPVO)) {
-                Integer oldValue = ipMapsCounts.get(blogIPVO);
-                if (oldValue < readingMax) {
-                    Integer newValue = oldValue + 1;
-                    ipMapsCounts.replace(blogIPVO, oldValue, newValue);
-                    return true;
-                } else
-                    return false;
-            } else {
-                ipMapsCounts.put(blogIPVO, 1);
-                return true;
-            }
+        if (redisCountService.setIpCount(blogId, ip)) {
+           return true;
         } else {
-            currentDate = date;
-            ipMapsCounts.clear();
-            ipMapsCounts.putIfAbsent(blogIPVO, 1);
             return false;
         }
-    }
-
-    public static boolean isSameHour(Date date1, Date date2) {
-        Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(date1);
-        Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(date2);
-        return isSameHour(cal1, cal2);
-    }
-
-    /**
-     * 判断两个两个时间是不是同一个小时
-     *
-     * @param cal1
-     * @param cal2
-     * @return
-     */
-    public static boolean isSameHour(Calendar cal1, Calendar cal2) {
-        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
-                && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
-                cal1.get(Calendar.HOUR_OF_DAY) == cal2.get(Calendar.HOUR_OF_DAY));
-                //cal1.get(Calendar.MINUTE) == cal2.get(Calendar.MINUTE));
-
     }
 }
 

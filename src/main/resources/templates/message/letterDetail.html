@@ -2,41 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>站内信</title>
+    <title>Title</title>
+    <link rel="stylesheet" media="all" href="/css/msg.css">
 </head>
 <body>
-<!--<header th:replace="header :: header"></header>-->
-<head th:replace="~{fragments/header :: header}"></head>
+<!--<head th:replace="~{fragments/header :: header}"></head>-->
 
-<div class="col-md-12 col-sm-12 d-none d-sm-block">
-    <div class="card mb-4 blog-list-container" th:each="msg : ${messages}">
-        <div class="card-block">
-            <h2 class="card-title">
-                <a class="list-head" th:if="${msg.get('user') ne null}" th:href="'/u/'+${msg.get('user').getUsername()}  + '/blogs'">
-                    <img width="100%" alt="头像" th:src="${msg.get('user').getHeadUrl()}">
+<div id="main">
+    <div class="container">
+        <ul class="letter-chatlist" th:each="msg : ${messages}">
+            <li id="msg-item-4009580">
+                <a class="list-head" th:href="'/user/'+${msg.get('user').getId()}">
+                    <img width="100%" alt="头像" th:src="${msg.get('headUrl')}">
                 </a>
-                <a class="list-head" th:if="${msg.get('user') eq null}">
-                    <img width="100%" alt="头像">
-                    你好
-                </a>
-            </h2>
-            <p class="card-text blog-summary" th:text="${msg.get('content')}">你好</p>
-            <div class="card-text">
-                创建于 [[${#dates.format(msg.get('message').getCreatedDate(), 'yyyy-MM-dd HH:mm')}]]
-            </div>
-        </div>
+                <div class="tooltip fade right in">
+                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip-inner letter-chat clearfix">
+                        <div class="letter-info">
+                            <p class="letter-time" th:text="${#dates.format(msg.get('message').getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}"></p>
+                            <a href="javascript:void(0);" id="del-link" name="4009580">删除</a>
+                        </div>
+                        <p class="chat-content" th:text="${msg.get('message').getContent()}">
+                            $!{msg.message.content}
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
     </div>
-
-    <!--                <div th:replace="~{fragments/page :: page}">...</div>-->
-</div>
-</div>
 </div>
 
-
-
-
-
-
-<!--<footer th:replace="~{fragments/footer :: footer}"></footer>-->
+<!--<footer th:replace="footer :: footer"></footer>-->
 </body>
 </html>

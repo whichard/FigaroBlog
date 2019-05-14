@@ -1,212 +1,216 @@
 <!DOCTYPE html>
 <html lang="en" data-th-fragment="header">
 <head>
-<meta charset="utf-8" />
-<!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<!-- CSRF -->
-<meta name="_csrf" th:content="${_csrf.token}" />
-<!-- default header name is X-CSRF-TOKEN -->
-<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta charset="utf-8" />
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <!-- CSRF -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 
-<!-- Tether core CSS -->
-<link href="../../css/tether.min.css" th:href="@{/css/tether.min.css}"
-	rel="stylesheet" />
+    <!-- Tether core CSS -->
+    <link href="../../css/tether.min.css" th:href="@{/css/tether.min.css}"
+          rel="stylesheet" />
 
-<!-- Bootstrap CSS -->
-<link href="../../css/bootstrap.min.css"
-	th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <!-- Bootstrap CSS -->
+    <link href="../../css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
 
-<!-- Font-Awesome CSS -->
-<link href="../../css/font-awesome.min.css"
-	th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+    <!-- Font-Awesome CSS -->
+    <link href="../../css/font-awesome.min.css"
+          th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
 
-<!-- NProgress CSS -->
-<link href="../../css/nprogress.css" th:href="@{/css/nprogress.css}"
-	rel="stylesheet" />
+    <!-- NProgress CSS -->
+    <link href="../../css/nprogress.css" th:href="@{/css/nprogress.css}"
+          rel="stylesheet" />
 
-<!-- thinker-md CSS -->
-<link href="../../css/thinker-md.vendor.css"
-	th:href="@{/css/thinker-md.vendor.css}" rel="stylesheet" />
+    <!-- thinker-md CSS -->
+    <link href="../../css/thinker-md.vendor.css"
+          th:href="@{/css/thinker-md.vendor.css}" rel="stylesheet" />
 
-<!-- bootstrap tags CSS -->
-<link href="../../css/bootstrap-tagsinput.css"
-	th:href="@{/css/jquery.tagsinput.min.css}" rel="stylesheet" />
+    <!-- bootstrap tags CSS -->
+    <link href="../../css/bootstrap-tagsinput.css"
+          th:href="@{/css/jquery.tagsinput.min.css}" rel="stylesheet" />
 
-<!-- bootstrap chosen CSS -->
-<link href="../../css/component-chosen.min.css"
-	th:href="@{/css/component-chosen.min.css}" rel="stylesheet" />
+    <!-- bootstrap chosen CSS -->
+    <link href="../../css/component-chosen.min.css"
+          th:href="@{/css/component-chosen.min.css}" rel="stylesheet" />
 
-<!-- toastr CSS -->
-<link href="../../css/toastr.min.css" th:href="@{/css/toastr.min.css}"
-	rel="stylesheet" />
+    <!-- toastr CSS -->
+    <link href="../../css/toastr.min.css" th:href="@{/css/toastr.min.css}"
+          rel="stylesheet" />
 
-<!-- jQuery image cropping plugin CSS -->
-<link href="../../css/cropbox.css" th:href="@{/css/cropbox.css}"
-	rel="stylesheet" />
+    <!-- jQuery image cropping plugin CSS -->
+    <link href="../../css/cropbox.css" th:href="@{/css/cropbox.css}"
+          rel="stylesheet" />
 
-<!-- Custom styles -->
-<link href="../../css/style.css" th:href="@{/css/style.css}"
-	rel="stylesheet" />
-<link href="../../css/thymeleaf-bootstrap-paginator.css"
-	th:href="@{/css/thymeleaf-bootstrap-paginator.css}" rel="stylesheet" />
-<link href="../../css/blog.css" th:href="@{/css/blog.css}"
-	rel="stylesheet" />
+    <!-- Custom styles -->
+    <link href="../../css/style.css" th:href="@{/css/style.css}"
+          rel="stylesheet" />
+    <link href="../../css/thymeleaf-bootstrap-paginator.css"
+          th:href="@{/css/thymeleaf-bootstrap-paginator.css}" rel="stylesheet" />
+    <link href="../../css/blog.css" th:href="@{/css/blog.css}"
+          rel="stylesheet" />
+
+    <link rel="stylesheet" media="all" href="/css/msg.css">
 
 
-<link href="/jquery-ui-1.12.1/jquery-ui.min.css" th:href="@{/jquery-ui-1.12.1/jquery-ui.min.css}"
-	  rel="stylesheet" />
+    <link href="/jquery-ui-1.12.1/jquery-ui.min.css" th:href="@{/jquery-ui-1.12.1/jquery-ui.min.css}"
+          rel="stylesheet" />
+    <link href="/jquery-ui-1.12.1/jquery-ui.min.css" th:href="@{/css/nav.css}"
+          rel="stylesheet" />
 
-<title>Whichard小站</title>
+    <title>Whichard小站</title>
 </head>
 <body>
-	<nav
-		class="navbar navbar-inverse bg-inverse navbar-toggleable-sm navbar-toggleable-md">
-		<div class="container col-12 col-sm-12 col-md-12">
-			<div class="navbar-header">
-				<button class="navbar-toggler navbar-toggler-right" type="button"
-					data-toggle="collapse" data-target="#navbarsContainer"
-					aria-controls="navbarsExampleContainer" aria-expanded="true"
-					aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon navbar-right "></span>
-				</button>
-				<a class="navbar-brand navbar-left" href="/" th:href="@{/}">Whichard</a>
-			</div>
-			<div class="collapse navbar-collapse" id="navbarsContainer">
+<nav
+        class="navbar navbar-inverse bg-inverse navbar-toggleable-sm navbar-toggleable-md">
+    <div class="container col-12 col-sm-12 col-md-12">
+        <div class="navbar-header">
+            <button class="navbar-toggler navbar-toggler-right" type="button"
+                    data-toggle="collapse" data-target="#navbarsContainer"
+                    aria-controls="navbarsExampleContainer" aria-expanded="true"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon navbar-right "></span>
+            </button>
+            <a class="navbar-brand navbar-left" href="/" th:href="@{/}">Whichard</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarsContainer">
 
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link"
-						href="javascript:void(0)" th:attr="url='/blogs?order=new'">最新
-							<span class="sr-only">(current)</span>
-					</a></li>
-					<li class="nav-item"><a class="nav-link"
-						href="javascript:void(0)" th:attr="url='/blogs?order=hot'">最热</a>
-					</li>
-					<li class="nav-item">
-						<form class="form-inline mt-2 mt-md-0">
-							<input class="form-control  col-md-8 mr-sm-0" type="text"
-								placeholder="搜索" id="indexkeyword" th:value="${keyword}">
-							<a href="javascript:void(0)"
-								class="btn btn-outline-secondary my-2 my-sm-0" id="indexsearch">
-								<i class="fa fa-search" aria-hidden="true"></i>
-							</a>
-						</form>
-					</li>
-					<!--<li class="nav-item dropdown"><a
-						class="dropdown-toggle nav-link" href="javascript:void(0)"
-						data-toggle="dropdown" id="pdf" aria-haspopup="true"
-						aria-expanded="false"> <span style="color: red">PDF实验室</span></a>
-						<div class="dropdown-menu"
-							aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="/u/waylau"
-								th:href="@{'/pdf/resume'}">简历生成器</a>
-						</div>
-					</li>-->
-				</ul>
-				<div sec:authorize="isAuthenticated()" class="row">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link"
+                                        href="javascript:void(0)" th:attr="url='/blogs?order=new'">最新
+                    <span class="sr-only">(current)</span>
+                </a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="javascript:void(0)" th:attr="url='/blogs?order=hot'">最热</a>
+                </li>
+                <li class="nav-item">
+                    <form class="form-inline mt-2 mt-md-0">
+                        <input class="form-control  col-md-8 mr-sm-0" type="text"
+                               placeholder="搜索" id="indexkeyword" th:value="${keyword}">
+                        <a href="javascript:void(0)"
+                           class="btn btn-outline-secondary my-2 my-sm-0" id="indexsearch">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </a>
+                    </form>
+                </li>
+                <!--<li class="nav-item dropdown"><a
+                    class="dropdown-toggle nav-link" href="javascript:void(0)"
+                    data-toggle="dropdown" id="pdf" aria-haspopup="true"
+                    aria-expanded="false"> <span style="color: red">PDF实验室</span></a>
+                    <div class="dropdown-menu"
+                        aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/u/waylau"
+                            th:href="@{'/pdf/resume'}">简历生成器</a>
+                    </div>
+                </li>-->
+            </ul>
+            <div sec:authorize="isAuthenticated()" class="row">
 
-					<div class="dropdown">
-						<a class="dropdown-toggle nav-link btn-outline-success"
-							href="/u/waylau" th:href="@{'/u/' + ${#authentication.name}}"
-							data-toggle="dropdown"><span sec:authentication="name"></span></a>
-						<div class="dropdown-menu">
-							<a class=" dropdown-item" href="/u/waylau"
-								th:href="@{'/u/' + ${#authentication.name}}">个人主页</a> <a
-								class="dropdown-item" href="/u/waylau/profile"
-								th:href="@{'/u/' + ${#authentication.name}} + '/profile'">个人设置</a>
-						</div>
-					</div>
-					<div>
-						<a href="/u/waylau/blogs/edit"
-						   th:href="'/msg/list'"
-						   class="btn btn-outline-success my-2 my-sm-0"
-						   th:if="not ${#strings.contains(#authentication.principal.authorities[0],'ROLE_VISTOR')}">站内信</a>
-					</div>
-					<div>
-						<a href="/u/waylau/blogs/edit"
-							th:href="'/u/' + ${#authentication.name} + '/blogs/edit'"
-							class="btn btn-outline-success my-2 my-sm-0"
-							th:if="not ${#strings.contains(#authentication.principal.authorities[0],'ROLE_VISTOR')}">写博客</a>
-					</div>
-					<div>
-						<form action="/logout" th:action="@{/logout}" method="post">
-							<input class="btn btn-outline-success my-2 my-sm-0" type="submit"
-								value="退出">
-						</form>
-					</div>
-				</div>
+                <div class="dropdown">
+                    <a class="dropdown-toggle nav-link btn-outline-success"
+                       href="/u/waylau" th:href="@{'/u/' + ${#authentication.name}}"
+                       data-toggle="dropdown"><span sec:authentication="name"></span></a>
+                    <div class="dropdown-menu">
+                        <a class=" dropdown-item" href="/u/waylau"
+                           th:href="@{'/u/' + ${#authentication.name}}">个人主页</a> <a
+                            class="dropdown-item" href="/u/waylau/profile"
+                            th:href="@{'/u/' + ${#authentication.name}} + '/profile'">个人设置</a>
+                    </div>
+                </div>
+                <div>
+                    <a href="/u/waylau/blogs/edit"
+                       th:href="'/msg/list'"
+                       class="btn btn-outline-success my-2 my-sm-0"
+                       th:if="not ${#strings.contains(#authentication.principal.authorities[0],'ROLE_VISTOR')}">站内信</a>
+                </div>
+                <div>
+                    <a href="/u/waylau/blogs/edit"
+                       th:href="'/u/' + ${#authentication.name} + '/blogs/edit'"
+                       class="btn btn-outline-success my-2 my-sm-0"
+                       th:if="not ${#strings.contains(#authentication.principal.authorities[0],'ROLE_VISTOR')}">写博客</a>
+                </div>
+                <div>
+                    <form action="/logout" th:action="@{/logout}" method="post">
+                        <input class="btn btn-outline-success my-2 my-sm-0" type="submit"
+                               value="退出">
+                    </form>
+                </div>
+            </div>
 
-				<div sec:authorize="isAnonymous()">
-					<a href="/login" class="btn btn-outline-success my-2 my-sm-0"
-						type="submit">登录</a> <a href="/register"
-						class="btn btn-outline-success my-2 my-sm-0" type="submit">注册</a>
-				</div>
-			</div>
+            <div sec:authorize="isAnonymous()">
+                <a href="/login" class="btn btn-outline-success my-2 my-sm-0"
+                   type="submit">登录</a> <a href="/register"
+                                           class="btn btn-outline-success my-2 my-sm-0" type="submit">注册</a>
+            </div>
+        </div>
 
-		</div>
-	</nav>
+    </div>
+</nav>
 
 
 
-	<script src="/static/js/jquery-1.9.1.js" th:src="@{/js/jquery-1.9.1.js}"></script>
-	<script src="/static/jquery-ui-1.12.1/jquery-ui.min.js" th:src="@{/jquery-ui-1.12.1/jquery-ui.min.js}"></script>
-	<script src="../../js/index.js" th:src="@{/js/index.js}"></script>
-	<script src="/static/jquery-ui-1.12.1/jquery-ui.js" th:src="@{/jquery-ui-1.12.1/jquery-ui.js}"></script>
+<script src="/static/js/jquery-1.9.1.js" th:src="@{/js/jquery-1.9.1.js}"></script>
+<script src="/static/jquery-ui-1.12.1/jquery-ui.min.js" th:src="@{/jquery-ui-1.12.1/jquery-ui.min.js}"></script>
+<script src="../../js/index.js" th:src="@{/js/index.js}"></script>
+<script src="/static/jquery-ui-1.12.1/jquery-ui.js" th:src="@{/jquery-ui-1.12.1/jquery-ui.js}"></script>
 
-	<script th:inline="javascript" type="text/javascript">
-		$(function() {
-			// 获取 CSRF Token
-			var csrfToken = $("meta[name='_csrf']").attr("content");
-			var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+<script th:inline="javascript" type="text/javascript">
+    $(function() {
+        // 获取 CSRF Token
+        var csrfToken = $("meta[name='_csrf']").attr("content");
+        var csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
-			var availableTags = [
-				"ActionScript",
-				"AppleScript",
-				"Asp",
-				"BASIC",
-				"C",
-				"C++",
-				"Clojure",
-				"COBOL",
-				"ColdFusion",
-				"Erlang",
-				"Fortran",
-				"Groovy",
-				"Haskell",
-				"Java",
-				"JavaScript",
-				"Lisp",
-				"Perl",
-				"PHP",
-				"Python",
-				"Ruby",
-				"Scala",
-				"Scheme"
-			];
-			$( "#indexkeyword" ).autocomplete({
-				minLength: 2, // 最小字符数，默认1
-				delay: 300, // 延迟加载300ms
-				source: function (request, response) { // 数据源
-					$.ajax({
-						url: '/search/autocomplete?prefix=' + request.term,
-						beforeSend: function (request) {
-							request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
-						},
-						success: function (res) {
-							if (res.code === 200) {
-								response(res.data);
-							}
-						}
-					});
-				},
-				select: function (event, ui) { // 选中事件
-					$('#indexkeyword').text(ui.item.value);
-					window.location.href = locate_url(start, size);
-				}
-			});
-		});
-	</script>
+        var availableTags = [
+            "ActionScript",
+            "AppleScript",
+            "Asp",
+            "BASIC",
+            "C",
+            "C++",
+            "Clojure",
+            "COBOL",
+            "ColdFusion",
+            "Erlang",
+            "Fortran",
+            "Groovy",
+            "Haskell",
+            "Java",
+            "JavaScript",
+            "Lisp",
+            "Perl",
+            "PHP",
+            "Python",
+            "Ruby",
+            "Scala",
+            "Scheme"
+        ];
+        $( "#indexkeyword" ).autocomplete({
+            minLength: 2, // 最小字符数，默认1
+            delay: 300, // 延迟加载300ms
+            source: function (request, response) { // 数据源
+                $.ajax({
+                    url: '/search/autocomplete?prefix=' + request.term,
+                    beforeSend: function (request) {
+                        request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
+                    },
+                    success: function (res) {
+                        if (res.code === 200) {
+                            response(res.data);
+                        }
+                    }
+                });
+            },
+            select: function (event, ui) { // 选中事件
+                $('#indexkeyword').text(ui.item.value);
+                window.location.href = locate_url(start, size);
+            }
+        });
+    });
+</script>
 
 
 </body>

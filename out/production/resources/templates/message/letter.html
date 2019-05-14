@@ -3,44 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>站内信</title>
+<!--    <link rel="stylesheet" media="all" href="/css/msg.css">-->
 </head>
 <body>
-<!--<header th:replace="header :: header"></header>-->
 <head th:replace="~{fragments/header :: header}"></head>
+<!--<header th:replace="header :: header"></header>-->
 
-<div class="col-md-12 col-sm-12 d-none d-sm-block">
-    <div class="card mb-4 blog-list-container" th:each="conversation : ${conversations}">
-        <div class="card-block">
+<div id="main">
+    <div class="container">
+        <ul class="letter-list" th:each="conversation : ${conversations}">
+            <li id="conversation-item-10005_622873">
+                <a class="letter-link" th:href="'/msg/detail?conversationId='+${conversation.get('conversation').getConversationId()}"></a>
+                <div class="letter-info">
+                    <span class="l-time" th:text="${#dates.format(conversation.get('conversation').getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}"></span>
+                    <div class="l-operate-bar">
+                        <a href="javascript:void(0);" class="sns-action-del" data-id="10005_622873">
+                            删除
+                        </a>
+                        <a th:href="'/msg/detail?conversationId='+${conversation.get('conversation').getConversationId()}"  th:text="'共'+${conversation.get('conversationsCount')}+'条会话'">
+                            共$!{conversation.conversation.id}条会话
+                        </a>
+                    </div>
+                </div>
+                <div class="chat-headbox">
+                        <span class="msg-num" th:text=" ${conversation.get('unread')}">
+                        </span>
+                    <a class="list-head" th:href="'/user/'+${conversation.get('user').getId()}">
+                        <img width="100%" alt="头像" th:src="${conversation.get('user').getHeadUrl()}">
+                    </a>
+                </div>
+                <div class="letter-detail">
+                    <a title="$!{conversation.user.name}" class="letter-name level-color-1" th:text="${conversation.get('user').getName()}">
 
-            <h2 class="card-title">
-                <a class="list-head" th:if="${conversation.get('user') ne null}" th:href="'/u/'+${conversation.get('user').getUsername()}  + '/blogs'">
-                    <img width="100%" alt="头像" th:src="${conversation.get('user').getHeadUrl()}">
-                </a>
-                <a class="list-head" th:if="${conversation.get('user') eq null}">
-                    <img width="100%" alt="头像">
-                </a>
-                <a href="/u/wqe"
-                   th:href="'/msg/detail?conversationId='+${conversation.get('conversation').getConversationId()}">
-                </a>
-                <a th:href="'/msg/detail?conversationId='+${conversation.get('conversation').getConversationId()}"  th:text="'共'+${conversation.get('conversationsCount')}+'条会话'">
-                    共$!{conversation.conversation.id}条会话
-                </a>
-            </h2>
-            <p class="card-text blog-summary" th:text="${conversation.get('conversation').getContent()}"></p>
-            <div class="card-text">
-                由[[${conversation.get('user').getUsername()}]]创建于 [[${#dates.format(conversation.get('conversation').getCreatedDate(), 'yyyy-MM-dd HH:mm')}]]
-            </div>
-        </div>
+                    </a>
+                    <p class="letter-brief">
+                        <a th:href="'/msg/detail?conversationId='+${conversation.get('conversation').getConversationId()}" th:text="${conversation.get('conversation').getContent()}">
+                        </a>
+                    </p>
+                </div>
+            </li>
+        </ul>
+
     </div>
-
-    <!--                <div th:replace="~{fragments/page :: page}">...</div>-->
 </div>
-
-
-
-
-
-
-<!--<footer th:replace="~{fragments/footer :: footer}"></footer>-->
 </body>
 </html>

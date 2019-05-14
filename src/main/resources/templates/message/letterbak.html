@@ -10,11 +10,10 @@
 
 <div class="col-md-12 col-sm-12 d-none d-sm-block">
     <div class="card mb-4 blog-list-container" th:each="conversation : ${conversations}">
-        <div>hi</div>
         <div class="card-block">
 
             <h2 class="card-title">
-                <a class="list-head" th:if="${conversation.get('user') ne null}" th:href="'/u/'+${conversation.get('user').getId()}  + '/blogs'">
+                <a class="list-head" th:if="${conversation.get('user') ne null}" th:href="'/u/'+${conversation.get('user').getUsername()}  + '/blogs'">
                     <img width="100%" alt="头像" th:src="${conversation.get('user').getHeadUrl()}">
                 </a>
                 <a class="list-head" th:if="${conversation.get('user') eq null}">
@@ -29,7 +28,7 @@
             </h2>
             <p class="card-text blog-summary" th:text="${conversation.get('conversation').getContent()}"></p>
             <div class="card-text">
-                创建于 [[${#dates.format(conversation.get('conversation').getCreatedDate(), 'yyyy-MM-dd HH:mm')}]]
+                由[[${conversation.get('user').getUsername()}]]创建于 [[${#dates.format(conversation.get('conversation').getCreatedDate(), 'yyyy-MM-dd HH:mm')}]]
             </div>
         </div>
     </div>

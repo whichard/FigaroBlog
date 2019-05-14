@@ -18,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.Size;
 
 import com.whichard.spring.boot.blog.config.CustomPasswordEncoder;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
@@ -132,10 +133,16 @@ public class User implements UserDetails {
     }
 
     public String getAvatar() {
+        if(StringUtils.isBlank(avatar))
+            return "/images/default_avatar_male.jpg";
         return avatar;
     }
 
-    public String getHeadUrl() { return avatar;}
+    public String getHeadUrl() {
+        if(StringUtils.isBlank(avatar))
+            return "/images/default_avatar_male.jpg";
+        return avatar;
+    }
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;

@@ -3,6 +3,7 @@ package com.whichard.spring.boot.blog.service;
 import com.whichard.spring.boot.blog.util.JedisAdapter;
 import com.whichard.spring.boot.blog.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +14,17 @@ import org.springframework.stereotype.Service;
 public class RedisCountService {
     @Autowired
     private JedisAdapter jedisAdapter;
+    @Value("${blog.expiretime}")
+    private int period;
+
+    public boolean setIpCount(Long blogId, String ip) {
+        String ipCountKey = RedisKeyUtil.getIpKey(blogId, ip);
+        long res = jedisAdapter.getCount(ipCountKey);
+        if (res > 0) return false;
+        jedisAdapter.expireInTime(ipCountKey, period);
+        return true;
+
+    }
 
     public void increaseReadSize(Long blogId) {
          String readSizeKey = RedisKeyUtil.getReadSizeKey(blogId);
