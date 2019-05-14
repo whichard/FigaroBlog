@@ -61,7 +61,7 @@ public class HttpAspect {
 //
 //        //参数
 //        logger.info("args={}", joinPoint.getArgs());
-        logger.info("url={} method={} ip={} class_method={} args={}", url, method
+        logger.debug("url={} method={} ip={} class_method={} args={}", url, method
                 , ip, class_method
                 , joinPoint.getArgs());
         VisitorLog visitorLog = new VisitorLog(url, method, ip, IpUtil.getAddressByIP(ip), class_method, args);

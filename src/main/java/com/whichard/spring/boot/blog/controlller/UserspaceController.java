@@ -449,8 +449,8 @@ public class UserspaceController {
             if (fileUrl == null) {
                 return ToutiaoUtil.getJSONString(1, "上传图片失败");
             }
-            //return fileUrl;//ToutiaoUtil.getJSONString(0, fileUrl);
-            return ResponseEntity.ok().body(new Response(true, "保存头像成功", fileUrl)).toString();
+            return fileUrl;//ToutiaoUtil.getJSONString(0, fileUrl);
+            //return ResponseEntity.ok().body(new Response(true, "保存头像成功", fileUrl)).toString();
             //return ResponseEntity.ok().body(new Response(true, "保存头像成功", avatarUrl));
         } catch (Exception e) {
             logger.error("上传图片失败" + e.getMessage());

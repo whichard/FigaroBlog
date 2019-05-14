@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>站内信</title>
-<!--    <link rel="stylesheet" media="all" href="/css/msg.css">-->
+    <link rel="stylesheet" media="all" href="/css/msg.css">
 </head>
 <body>
 <head th:replace="~{fragments/header :: header}"></head>
@@ -28,12 +28,12 @@
                 <div class="chat-headbox">
                         <span class="msg-num" th:text=" ${conversation.get('unread')}">
                         </span>
-                    <a class="list-head" th:href="'/user/'+${conversation.get('user').getId()}">
+                    <a class="list-head" th:if="${conversation.get('user') ne null}" th:href="'/u/'+${conversation.get('user').getUsername()}  + '/blogs'">
                         <img width="100%" alt="头像" th:src="${conversation.get('user').getHeadUrl()}">
                     </a>
                 </div>
                 <div class="letter-detail">
-                    <a title="$!{conversation.user.name}" class="letter-name level-color-1" th:text="${conversation.get('user').getName()}">
+                    <a title="$!{conversation.user.username}" class="letter-name level-color-1" th:if="${conversation.get('user') ne null}" th:text="${conversation.get('user').getUsername()}">
 
                     </a>
                     <p class="letter-brief">

@@ -101,5 +101,16 @@ public class Message {
         this.hasRead = hasRead;
     }
 
-
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", fromId=" + fromId +
+                ", toId=" + toId +
+                ", content='" + content + '\'' +
+                ", createdDate=" + createdDate +
+                ", hasRead=" + hasRead +
+                ", conversationId='" + conversationId + '\'' +
+                '}';
+    }
 }

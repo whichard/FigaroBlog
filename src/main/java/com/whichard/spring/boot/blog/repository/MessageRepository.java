@@ -20,7 +20,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     //对话列表
       @Query(
-            value = "select from_id, to_id, content, has_read, conversation_id, created_date ,count(id) as id from ( select * from message where from_id= ?1 or to_id= ?1 order by id desc) tt group by conversation_id order by id desc",
+            value = "select from_id, to_id, content, has_read, conversation_id, created_date ,count(id) as id from ( select * from message where from_id= ?1 or to_id= ?1 order by id desc) tt group by conversation_id order by created_date desc",
             nativeQuery = true)
     List<Message> getConversationList(int userId);
 

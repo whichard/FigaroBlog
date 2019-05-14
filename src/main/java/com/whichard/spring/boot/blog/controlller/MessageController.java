@@ -10,14 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author wq
@@ -34,30 +33,38 @@ public class MessageController {
     UserService userService;
 
     @GetMapping("/msg/list")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER','ROLE_VISTOR')")
     public String conversationDetail(Model model) {
-        try {
+        //try {
             User curr = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             int localUserId = curr.getId().intValue();
             List<ViewObject> conversations = new ArrayList<ViewObject>();
             List<Message> conversationList = messageService.getConversationList(localUserId);
-            for (Message msg : conversationList) {
+            //去重
+        Set<Message> set = new HashSet<>();
+            for (Message msg : conversationList)
+                set.add(msg);
+            for (Message msg : set) {
                 ViewObject vo = new ViewObject();
                 vo.set("conversation", msg);
                 int targetId = msg.getFromId() == localUserId ? msg.getToId() : msg.getFromId();
                 User user = userService.getUserById((long)targetId);
+                System.out.println(msg);
+                //制作跳转到发信人主页的头像链接
                 vo.set("user", user);
                 vo.set("conversationsCount", messageService.getConversationCount(msg.getConversationId()));
                 vo.set("unread", messageService.getConversationUnreadCount(localUserId, msg.getConversationId()));
                 conversations.add(vo);
             }
             model.addAttribute("conversations", conversations);
-        } catch (Exception e) {
-            logger.error("获取站内信列表失败" + e.getMessage());
-        }
+        /*} catch (Exception e) {
+            logger.error("获取站内信列表失败 " + e.getMessage());
+        }*/
         return "message/letter";
     }
 
     @GetMapping("/msg/detail")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER','ROLE_VISTOR')")
     public String conversationDetail(Model model, @Param("conversationId") String conversationId) {
         try {
             List<Message> conversationList = messageService.getConversionDetail(conversationId);

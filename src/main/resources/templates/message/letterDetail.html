@@ -10,7 +10,7 @@
 
 <div id="main">
     <div class="container">
-        <ul class="letter-chatlist" th:each="msg : ${messages}">
+        <ul class="letter-chatlist " th:each="msg : ${messages}">
             <li id="msg-item-4009580">
                 <a class="list-head" th:href="'/user/'+${msg.get('user').getId()}">
                     <img width="100%" alt="头像" th:src="${msg.get('headUrl')}">

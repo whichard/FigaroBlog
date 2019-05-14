@@ -33,7 +33,7 @@ public class MessageServiceTest {
         }
     }
 
-    @Test
+  /*  @Test
     public void getConversationList() {
         List<Message> list = messageService.getConversationList(1);
         for(Message m : list)
@@ -50,12 +50,12 @@ public class MessageServiceTest {
                 System.out.println(m.getFromId() +"" + m.getToId());
         }
 
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void getConversationUnreadCount() {
         int count = messageService.getConversationUnreadCount(1, "1_2");
         System.out.println(count);
-    }
+    }*/
 
 }

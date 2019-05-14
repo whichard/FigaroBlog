@@ -20,6 +20,7 @@ public class EventProducer {
             String json = JSONObject.toJSONString(eventModel);
             String key = RedisKeyUtil.getEventQueueKey();
             jedisAdapter.lpush(key, json);
+            System.out.println("hi");
             return true;
         } catch (Exception e) {
             return false;

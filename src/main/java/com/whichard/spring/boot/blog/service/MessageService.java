@@ -1,6 +1,7 @@
 package com.whichard.spring.boot.blog.service;
 
 import com.whichard.spring.boot.blog.domain.Message;
+import com.whichard.spring.boot.blog.repository.MessageDAO;
 import com.whichard.spring.boot.blog.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ import java.util.List;
 public class MessageService {
     @Autowired
     MessageRepository messageRepository;
+
+    @Autowired
+    MessageDAO messageDAO;
 
     public int addMessage(Message message) {
         message.setConversationId();
