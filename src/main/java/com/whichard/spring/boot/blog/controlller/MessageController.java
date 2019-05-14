@@ -66,8 +66,14 @@ public class MessageController {
     @GetMapping("/msg/detail")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER','ROLE_VISTOR')")
     public String conversationDetail(Model model, @Param("conversationId") String conversationId) {
+        User curr = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
-            List<Message> conversationList = messageService.getConversionDetail(conversationId);
+            List<Message> list = messageService.getConversionDetail(conversationId);
+            List<Message> conversationList = new ArrayList<>();
+            for(Message i : list) {
+                if(i.getToId() == curr.getId())
+                    conversationList.add(i);
+            }
             List<ViewObject> messages = new ArrayList<>();
             for (Message msg : conversationList) {
                 ViewObject vo = new ViewObject();

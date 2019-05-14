@@ -2,8 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
-<link href="../../css/markdown.css" th:href="@{/css/markdown.css}"
-	rel="stylesheet" />
+<link href="../../css/markdown.css" th:href="@{/css/markdown.css}" rel="stylesheet" />
 
 <title th:text="${blogModel.title}+' - Whichard小站'">Whichard小站</title>
 <meta name="keywords" th:content="${blogModel.tags}" />
@@ -244,9 +243,6 @@
         sites: ['weixin', 'weibo', 'qzone', 'douban']
     })
 </script>
-
-
-	<script src="../../js/userspace/blog.js"
-		th:src="@{/js/userspace/blog.js}"></script>
+<script src="../../js/userspace/blog.js" th:src="@{/js/userspace/blog.js}"></script>
 </body>
 </html>

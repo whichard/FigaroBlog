@@ -39,7 +39,7 @@ public class JedisAdapter implements InitializingBean {
             jedis.expire(key, period);//3 * 60 * 60);
             return 1;
         } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
+            logger.error("Jedis:expireInTime发生异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -54,7 +54,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.incr(key);
         } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
+            logger.error("Jedis:incr发生异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -69,7 +69,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return Integer.parseInt(jedis.get(key));
         } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
+            logger.error("Jedis:getCount发生异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -84,7 +84,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.sadd(key, value);
         } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
+            logger.error("Jedis:sadd发生异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -99,7 +99,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.srem(key, value);
         } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
+            logger.error("Jedis:srem发生异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -114,7 +114,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.scard(key);
         } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
+            logger.error("Jedis:scard发生异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -129,7 +129,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.exists(key);
         } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
+            logger.error("Jedis:exist发生异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -144,7 +144,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.sismember(key, value);
         } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
+            logger.error("sismember发生异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -159,7 +159,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.brpop(timeout, key);
         } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
+            logger.error("brpop发生异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -174,7 +174,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.lpush(key, value);
         } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
+            logger.error("lpush发生异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();

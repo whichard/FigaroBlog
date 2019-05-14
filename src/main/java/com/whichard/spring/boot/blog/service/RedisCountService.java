@@ -19,8 +19,7 @@ public class RedisCountService {
 
     public boolean setIpCount(Long blogId, String ip) {
         String ipCountKey = RedisKeyUtil.getIpKey(blogId, ip);
-        long res = jedisAdapter.getCount(ipCountKey);
-        if (res > 0) return false;
+        if (jedisAdapter.exist(ipCountKey)) return false;
         jedisAdapter.expireInTime(ipCountKey, period);
         return true;
 

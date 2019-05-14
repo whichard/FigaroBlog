@@ -33,26 +33,25 @@ public class LikeHandler implements EventHandler {
     @Override
     public void doHandle(EventModel model) {
         Message message = new Message();
-        User user = userService.getUserById((long)model.getActorId());
+        User from = userService.getUserById((long)model.getActorId());
         int toId = 1, fromId = 2;
         try {
             toId = blogService.getBlogById((long)model.getEntityId()).getUser().getId().intValue();
-            fromId = user.getId().intValue();
-        } catch (Exception e) {
-            System.out.println("error likeHandler" + e.getMessage());
-        }
+            fromId = from.getId().intValue();
         message.setToId(2);
         //被赞blog作者的ID
         message.setToId(toId);
-        message.setContent("用户" + user.getUsername() +
-                " 赞了你的博客，http://127.0.0.1:8080/news/"
-                + String.valueOf(model.getEntityId()));
+        message.setContent("用户" + from.getUsername() +
+                " 赞了你的博客《" + blogService.getBlogById((long)model.getEntityId()).getTitle() + "》");
         // SYSTEM ACCOUNT
-        message.setFromId(3);
+        //message.setFromId(3);
         message.setFromId(fromId);
 
         message.setCreatedDate(new Date());
         messageService.addMessage(message);
+        } catch (Exception e) {
+            System.out.println("Error likeHandler : " + e.getMessage());
+        }
     }
 
     @Override
