@@ -42,11 +42,24 @@ public class MessageService {
         return list;
     }
 
+    //全部未读消息
+    public int getTotalUnread(int userId){
+        return messageRepository.countByHasReadAndToId(0, userId);
+    }
+
     public int getConversationUnreadCount(int userId, String conversationId) {
         return messageRepository.countByHasReadAndToIdAndConversationId(0, userId, conversationId);
     }
 
     public int getConversationCount(String conversationId) {
         return messageRepository.countByConversationId(conversationId);
+    }
+
+    public void deleteConversation(int fromId, int toId) {
+        String conversationId;
+        if(fromId < toId)
+            conversationId = String.format("%d_%d", fromId, toId);
+        conversationId = String.format("%d_%d", toId, fromId);
+        messageRepository.deleteByToIdAndConversationId(toId, conversationId);
     }
 }

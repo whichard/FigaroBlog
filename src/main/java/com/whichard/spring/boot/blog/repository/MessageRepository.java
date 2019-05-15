@@ -24,8 +24,11 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
             nativeQuery = true)
     List<Message> getConversationList(int userId);
 
-      //未读消息
+      //某个对话中未读消息
     int countByHasReadAndToIdAndConversationId(int hasRead, int userId, String conversationId);
 
-    //int findBy
+    //全部未读消息
+    int countByHasReadAndToId(int hasRead, int toId);
+
+    int deleteByToIdAndConversationId(int toId, String conversationId);
 }

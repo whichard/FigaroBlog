@@ -32,6 +32,23 @@ public class MessageController {
     @Autowired
     UserService userService;
 
+    @GetMapping("msg/del")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER','ROLE_VISTOR')")
+    public String delMessage(@Param("toId") int fromId) {
+        User curr = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(curr != null)
+            messageService.deleteConversation(fromId, curr.getId().intValue());
+        return "/msg/list";
+    }
+
+    @GetMapping("/msg/unread")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER','ROLE_VISTOR')")
+    public int getUnread() {
+        User curr = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return messageService.getTotalUnread(curr.getId().intValue());
+    }
+
     @GetMapping("/msg/list")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER','ROLE_VISTOR')")
     public String conversationDetail(Model model) {
@@ -41,7 +58,16 @@ public class MessageController {
             List<ViewObject> conversations = new ArrayList<ViewObject>();
             List<Message> conversationList = messageService.getConversationList(localUserId);
             //去重
-        Set<Message> set = new HashSet<>();
+            //Comparator<Message> comparator = (Message o1, Message o2) -> (o1.getCreatedDate().compareTo(o2.getCreatedDate()));
+            Set<Message> set = new TreeSet<Message>(new Comparator<Message>() {
+                @Override
+                public int compare(Message o1, Message o2) {
+                    if(o1.getCreatedDate().before(o2.getCreatedDate()))
+                        return 1;
+                    else if(o1.getCreatedDate().after(o2.getCreatedDate())) return -1;
+                    else return 0;
+                }
+            });
             for (Message msg : conversationList)
                 set.add(msg);
             for (Message msg : set) {
@@ -49,7 +75,7 @@ public class MessageController {
                 vo.set("conversation", msg);
                 int targetId = msg.getFromId() == localUserId ? msg.getToId() : msg.getFromId();
                 User user = userService.getUserById((long)targetId);
-                System.out.println(msg);
+                //System.out.println(msg);
                 //制作跳转到发信人主页的头像链接
                 vo.set("user", user);
                 vo.set("conversationsCount", messageService.getConversationCount(msg.getConversationId()));

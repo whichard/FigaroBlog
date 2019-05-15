@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.whichard.spring.boot.blog.domain.Blog;
 import com.whichard.spring.boot.blog.service.BlogService;
+import com.whichard.spring.boot.blog.service.MessageService;
 import com.whichard.spring.boot.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,9 @@ public class BlogController {
 
     @Autowired
     private BlogService blogService;
+
+    @Autowired
+    MessageService messageService;
 
     /**
      * @param async
@@ -93,11 +98,16 @@ public class BlogController {
 
         list = page.getContent();   // 当前所在页面数据列表
 
+        User curr = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int unread = 0;
+        if(curr != null)
+            unread = messageService.getTotalUnread(curr.getId().intValue());
 
         model.addAttribute("order", order);
         model.addAttribute("keyword", keyword);
         model.addAttribute("page", page);
         model.addAttribute("blogList", list);
+        model.addAttribute("unread", unread);
 
         // 首次访问页面才加载，在翻页下一页搜索博客等等，不需要再加载这些内容（此时已经注入）
         if (!async && !isEmpty) {

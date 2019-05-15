@@ -38,7 +38,7 @@ public class LikeHandler implements EventHandler {
         try {
             toId = blogService.getBlogById((long)model.getEntityId()).getUser().getId().intValue();
             fromId = from.getId().intValue();
-        message.setToId(2);
+            if(fromId == toId) return;
         //被赞blog作者的ID
         message.setToId(toId);
         message.setContent("用户" + from.getUsername() +

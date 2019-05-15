@@ -17,16 +17,16 @@
                 <div class="letter-info">
                     <span class="l-time" th:text="${#dates.format(conversation.get('conversation').getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}"></span>
                     <div class="l-operate-bar">
-                        <a href="javascript:void(0);" class="sns-action-del" data-id="10005_622873">
+                        <!--<a href="javascript:void(0);" class="sns-action-del" data-id="10005_622873">
                             删除
-                        </a>
+                        </a>-->
                         <a th:href="'/msg/detail?conversationId='+${conversation.get('conversation').getConversationId()}"  th:text="'共'+${conversation.get('conversationsCount')}+'条会话'">
                             共$!{conversation.conversation.id}条会话
                         </a>
                     </div>
                 </div>
                 <div class="chat-headbox">
-                        <span class="msg-num" th:text=" ${conversation.get('unread')}">
+                        <span class="msg-num" th:if="${conversation.get('unread')gt 0}" th:text=" ${conversation.get('unread')}">
                         </span>
                     <a class="list-head" th:if="${conversation.get('user') ne null}" th:href="'/u/'+${conversation.get('user').getUsername()}  + '/blogs'">
                         <img width="100%" alt="头像" th:src="${conversation.get('user').getHeadUrl()}">

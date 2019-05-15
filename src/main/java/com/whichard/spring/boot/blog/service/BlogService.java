@@ -56,7 +56,7 @@ public class BlogService {
             esBlog = new EsBlog(returnBlog);
         } else {
             esBlog = esBlogService.getEsBlogByBlogId(blog.getId());
-            esBlog.setReadSize((int)redisCountService.getReadSize(blog.getId()));
+            //esBlog.setReadSize((int)redisCountService.getReadSize(blog.getId()));
             esBlog.update(returnBlog);
         }
 
