@@ -2,6 +2,7 @@ package com.whichard.spring.boot.blog.domain;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
@@ -64,6 +65,10 @@ public class Blog implements Serializable {
     @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
     private Timestamp createTime;
 
+    @Column(nullable = false)
+    @org.hibernate.annotations.CreationTimestamp  // 由数据库自动创建时间
+    private Timestamp lastCommentTime;
+
     @Column(name = "readSize")
     private Integer readSize = 0; // 访问量、阅读量
 
@@ -75,6 +80,9 @@ public class Blog implements Serializable {
 
     @Column(name = "tags", length = 100)
     private String tags;  // 标签
+
+    @Column(name = "score")
+    private Double score = 0.0;  // 排序分数
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "blog_comment", joinColumns = @JoinColumn(name = "blog_id", referencedColumnName = "id"),
@@ -98,6 +106,7 @@ public class Blog implements Serializable {
     @Column(name = "blogPriority")
     private Integer priority = 0;
 
+
     protected Blog() {
         // TODO Auto-generated constructor stub
     }
@@ -107,6 +116,15 @@ public class Blog implements Serializable {
         this.summary = summary;
         this.content = content;
     }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
 
     public Long getId() {
         return id;
@@ -151,6 +169,14 @@ public class Blog implements Serializable {
 
     public Timestamp getCreateTime() {
         return createTime;
+    }
+
+    public Timestamp getLastCommentTime() {
+        return lastCommentTime;
+    }
+
+    public void setLastCommentTime(Timestamp lastCommentTime) {
+        this.lastCommentTime = lastCommentTime;
     }
 
     public String getHtmlContent() {

@@ -62,6 +62,10 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
      */
     List<Blog> findByComments(List<Comment> comments);
 
+    Page<Blog> findByOrderByCreateTimeDesc(Pageable pageable);
+
+    Page<Blog> findByOrderByScoreDesc(Pageable pageable);
+
     /**
      * 根据点赞查找博客，管理员删除用户的时候用
      *

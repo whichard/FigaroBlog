@@ -16,6 +16,7 @@ import com.whichard.spring.boot.blog.domain.Vote;
 import com.whichard.spring.boot.blog.domain.es.EsBlog;
 import com.whichard.spring.boot.blog.repository.BlogRepository;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -45,13 +46,47 @@ public class BlogService {
     @Autowired
     private RedisCountService redisCountService;
 
+    //博客排序分数计算
+    private Blog setScore(Blog blog) {
+        Date date = new Date();
+        double newscore = 0.0;
+        newscore = Math.log(blog.getReadSize()) + blog.getCommentSize() + blog.getVoteSize();
+
+        long blogAge = 1, lastCommentAge = 1;
+        try {
+            if(blog.getCreateTime() != null)
+                blogAge = (date.getTime() - blog.getCreateTime().getTime()) / (1000*3600*24);//getTime() 毫秒数 1000*3600 = 1小时
+            lastCommentAge = (date.getTime() - blog.getLastCommentTime().getTime()) / (1000*3600*24);
+        } catch (Exception e) {
+
+        }
+        if(blogAge >= 1)
+            newscore = newscore / blogAge;
+        if(lastCommentAge >= 1)
+            newscore = newscore / lastCommentAge;
+        if(newscore >= 0)
+            blog.setScore(newscore);
+        return blog;
+    }
+
     @Transactional
     public Blog saveBlog(Blog blog) {
-        boolean isNew = (blog.getId() == null);
+        //boolean isNew1 = (blog.getId() == null);
         EsBlog esBlog = null;
 
-        Blog returnBlog = blogRepository.save(blog);
+        blog = setScore(blog);
 
+        Blog returnBlog = blogRepository.save(blog);
+        /*boolean isNew = (blog.getId() == null);
+        if (isNew) {
+            esBlog = new EsBlog(returnBlog);
+        } else {
+            esBlog = esBlogService.getEsBlogByBlogId(blog.getId());
+            //esBlog.setReadSize((int)redisCountService.getReadSize(blog.getId()));
+            esBlog.update(returnBlog);
+        }*/
+
+        boolean isNew = (blog.getId() == null || esBlogService.getEsBlogByBlogId(blog.getId()) == null);
         if (isNew) {
             esBlog = new EsBlog(returnBlog);
         } else {
@@ -105,6 +140,10 @@ public class BlogService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Comment comment = new Comment(user, commentContent);
         originalBlog.addComment(comment);
+        Date date = new Date();
+        java.sql.Timestamp sq = new java.sql.Timestamp(date.getTime());
+        originalBlog.setLastCommentTime(sq);
+        originalBlog = setScore(originalBlog);
         return this.saveBlog(originalBlog);
     }
 
@@ -122,6 +161,7 @@ public class BlogService {
         if (isExist) {
             throw new IllegalArgumentException("您已经点过赞了哟~");
         }
+        originalBlog = setScore(originalBlog);
         return this.saveBlog(originalBlog);
     }
 
@@ -129,6 +169,20 @@ public class BlogService {
         Blog originalBlog = blogRepository.findOne(blogId);
         originalBlog.removeVote(voteId);
         this.saveBlog(originalBlog);
+    }
+
+    public Page<Blog> listHotestBlogs(Pageable pageable) {
+        Page<Blog> blogs = blogRepository.findByOrderByScoreDesc(pageable);
+        return blogs;
+    }
+
+    public Page<Blog> listNewestBlogs(Pageable pageable) {
+        Page<Blog> blogs = blogRepository.findByOrderByCreateTimeDesc(pageable);
+        return blogs;
+    }
+
+    public Page<Blog> listAllBlogs(Pageable pageable) {
+        return blogRepository.findAll(pageable);
     }
 
     public Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable) {

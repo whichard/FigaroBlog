@@ -76,28 +76,32 @@ public class BlogController {
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
             Model model) {
 
-        Page<EsBlog> page = null;
-        List<EsBlog> list = null;
+        Page<Blog> page = null;
+
+        List<Blog> list = null;
         boolean isEmpty = true; // 系统初始化时，没有博客数据
         try {
             if (order.equals("hot")) { // 最热查询
                 //              Sort sort = new Sort(Direction.DESC,"priority","readSize","commentSize","voteSize","createTime");
                 Pageable pageable = new PageRequest(pageIndex, pageSize);
-                page = esBlogService.listHotestEsBlogs(keyword, pageable);
+                //page = esBlogService.listHotestEsBlogs(keyword, pageable);
+                page = blogService.listHotestBlogs(pageable);
             } else if (order.equals("new")) { // 最新查询
                 //             Sort sort = new Sort(Direction.DESC,"priority","createTime");
                 Pageable pageable = new PageRequest(pageIndex, pageSize);
-                page = esBlogService.listNewestEsBlogs(keyword, pageable);
+                //page = esBlogService.listNewestEsBlogs(keyword, pageable);
+                page = blogService.listNewestBlogs(pageable);
             }
 
             isEmpty = false;
         } catch (Exception e) {
             Pageable pageable = new PageRequest(pageIndex, pageSize);
-            page = esBlogService.listEsBlogs(pageable);
+            page = blogService.listAllBlogs(pageable);
         }
 
         list = page.getContent();   // 当前所在页面数据列表
 
+        //获取未读消息数，用于首页展示
         User curr = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         int unread = 0;
         if(curr != null)

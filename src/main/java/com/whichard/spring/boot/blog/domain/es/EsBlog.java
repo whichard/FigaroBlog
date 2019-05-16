@@ -54,8 +54,8 @@ public class EsBlog implements Serializable {
     @Field(type = FieldType.Integer, index = FieldIndex.not_analyzed)  // 不做全文检索字段
     private Integer priority;
 
-    @CompletionField(searchAnalyzer = "ik_max_word",analyzer = "ik_smart")
-    private String suggest;
+    /*@CompletionField(searchAnalyzer = "ik_max_word",analyzer = "ik_smart")
+    private String suggest;*/
 
     protected EsBlog() {  // JPA 的规范要求无参构造函数；设为 protected 防止直接使用
     }
