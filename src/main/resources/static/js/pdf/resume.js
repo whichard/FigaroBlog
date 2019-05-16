@@ -2,9 +2,6 @@
  * resume.html
  */
 $(function () {
-    // 获取 CSRF Token
-    var csrfToken = $("meta[name='_csrf']").attr("content");
-    var csrfHeader = $("meta[name='_csrf_header']").attr("content");
     var educationNumber = 2;
     var practiceNumber = 2;
     var projectNumber = 2;
@@ -83,7 +80,7 @@ $(function () {
     jQuery.validator.addMethod("isPhone", function (value, element) {
         var length = value.length;
         return this.optional(element) || (length == 11 && /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(value));
-    }, '请填写正确的手机号');
+    },'请填写正确的手机号');
     //为个人信息和技能添加校验
     $('#name').addClass('required');
     $('#birth').addClass('required');
@@ -93,7 +90,6 @@ $(function () {
     $('#target').addClass('required');
     $('#location').addClass('required');
     $('#skills').addClass('required');
-
     //为所有动态添加的元素添加校验属性
     function addValidate() {
         $('input[name^="start"]').each(function () {
@@ -173,7 +169,7 @@ $(function () {
     });
 
     $("#imgName").fileinput({
-        uploadUrl: '/u/uploadImage',//url + '/avator/upload',
+        uploadUrl: url + '/avator/upload',
         overwriteInitial: true,
         ajaxSettings: {type: 'post', processData: false, contentType: false},
         language: 'zh',
@@ -193,10 +189,7 @@ $(function () {
         msgErrorClass: 'alert alert-block alert-danger',
         defaultPreviewContent: '<img src="/images/default_avatar_male.jpg" alt="Your Avatar">',
         layoutTemplates: {main2: '{preview}  {remove} {browse}'},
-        allowedFileExtensions: ["jpg", "jpeg","png", "gif"],
-        beforeSend: function (request) {
-            request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
-        }
+        allowedFileExtensions: ["jpg", "png", "gif"]
     }).on("fileuploaded", function (event, data, previewId, index) {    //一个文件上传成功
         if (data.response.success) {
             toastr.success(data.response.message);
@@ -206,7 +199,6 @@ $(function () {
             toastr.error(data.response.message);
         }
     })
-
     function changeDate(date) {
         var data = date.split('-');
         return data[0] + "." + data[1];
@@ -380,20 +372,17 @@ $(function () {
 
     function sendFormData() {
         $.ajax({
-            url: '/u/uploadImage',//url + "/pdf/resume",
+            url: url + "/pdf/resume",
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(formData),
-            beforeSend: function (request) {
-                request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
-            },
             success: function (data) {
                 if (data.success) {
                     toastr.success(data.message);
                     $("#preview").removeClass("disabled");
                     $("#download").removeClass("disabled");
-                    $("#preview").attr('href', data);//url + "/view/" + data.body.id);
-                    $("#download").attr('href', data);//url + "/files/" + data.body.id);
+                    $("#preview").attr('href', url + "/view/" + data.body.id);
+                    $("#download").attr('href', url + "/files/" + data.body.id);
                 } else {
                     toastr.error(data.message);
                 }

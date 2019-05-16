@@ -25,6 +25,10 @@ public class MessageService {
         return 0; //may change
     }
 
+    public void delMessageById(int msgId) {
+        messageRepository.deleteById(msgId);
+    }
+
     public void hasRead(Message message) {
         message.setHasRead(1);
         messageRepository.save(message);

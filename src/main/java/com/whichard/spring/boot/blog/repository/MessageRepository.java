@@ -31,4 +31,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     int countByHasReadAndToId(int hasRead, int toId);
 
     int deleteByToIdAndConversationId(int toId, String conversationId);
+
+    int deleteById(int msgId);
 }

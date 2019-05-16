@@ -1,14 +1,5 @@
-var uploader = WebUploader.create({
-    auto: false,// 选完文件后，是否自动上传。
-    swf: '/static/Uploader.swf',// swf文件路径
-    server: '/upload',// 文件接收服务端。
-    pick: '#picker',// 选择文件的按钮。可选。
-    chunked: true,//开启分片上传
-    chunkSize: 5 * 1024 * 1024,//5M
-    chunkRetry: 3,//错误重试次数
-});
 
-$("#uploadImage").click(function () {
+// $("#uploadImage").click(function () {
     var md5File;
     var csrfToken = $("meta[name='_csrf']").attr("content");
     var csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -93,8 +84,10 @@ $("#uploadImage").click(function () {
                     },
                     success: function (response) {
                         if (response) {
+                            $('#' + file.id).find('p.state').text('upload success');
+                            $('#' + file.id).find('.progress').fadeOut();
                                 var mdcontent = $("#md").val();
-                                $("#md").val(mdcontent + "\n![](" + data + ") \n");
+                                $("#md").val(mdcontent + "\n![](" + response + ") \n");
                         } else {
                             $('#' + file.id).find('p.state').text('merge error');
                             deferred.reject();
@@ -106,6 +99,15 @@ $("#uploadImage").click(function () {
         }
     });
 
+    var uploader = WebUploader.create({
+        auto: false,// 选完文件后，是否自动上传。
+        swf: '/static/Uploader.swf',// swf文件路径
+        server: '/upload',// 文件接收服务端。
+        pick: '#picker',// 选择文件的按钮。可选。
+        chunked: true,//开启分片上传
+        chunkSize: 5 * 1024 * 1024,//5M
+        chunkRetry: 3,//错误重试次数
+    });
 
 
 //上传添加参数
@@ -136,4 +138,4 @@ $("#uploadImage").click(function () {
         $li.find('p.state').text('Uploading');
         $percent.css('width', percentage * 100 + '%');
     });
-});
+// });

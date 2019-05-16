@@ -102,7 +102,12 @@ public class BlogController {
         list = page.getContent();   // 当前所在页面数据列表
 
         //获取未读消息数，用于首页展示
-        User curr = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User curr = null;
+        try {
+            curr  = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (Exception e) {
+
+        }
         int unread = 0;
         if(curr != null)
             unread = messageService.getTotalUnread(curr.getId().intValue());

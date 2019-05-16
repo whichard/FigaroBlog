@@ -262,8 +262,7 @@ public class UserspaceController {
     public String getBlogById(@PathVariable("username") String username, @PathVariable("id") Long id, Model model) {
         User principal = null;
         Blog blog = blogService.getBlogById(id);
-
-        // 3小时内只能增加一次阅读量
+        //一段时间内只能点赞一次
         if (readingIsMax(id)) {
             blogService.readingIncrease(id);
             redisCountService.increaseReadSize(id);
@@ -301,17 +300,29 @@ public class UserspaceController {
             }
         }
 
+        //Redis get 数据
+        int isLiked = 0;
+        long readSize = 0, likeCount = 0, userId = 0;
+        try {
+            isLiked = likeService.getLikeStatus(principal.getId(),0, blog.getId());
+            likeCount = likeService.getLikeCount(0,blog.getId());
+            readSize = redisCountService.getReadSize(blog.getId());
+            userId = principal.getId();
+        } catch (Exception e) {
+
+        }
+
         model.addAttribute("currentVote", currentVote);
         //currentVote.getId()
         model.addAttribute("isBlogOwner", isBlogOwner);
         model.addAttribute("blogModel", blog);
         //当前like数
-        model.addAttribute("likeCount", likeService.getLikeCount(0,blog.getId() ));
+        model.addAttribute("likeCount", likeCount);
         //当前用户like情况
-        model.addAttribute("isLiked", likeService.getLikeStatus(principal.getId(),0, blog.getId()));
-        model.addAttribute("userId", principal.getId());
+        model.addAttribute("isLiked", isLiked);
+        model.addAttribute("userId", userId);
         //redis - 喜欢数
-        model.addAttribute("readSize", redisCountService.getReadSize(blog.getId()));
+        model.addAttribute("readSize", readSize);
 
         return "/userspace/blog";
     }

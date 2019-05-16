@@ -114,6 +114,7 @@ public class MessageController {
                 messages.add(vo);
             }
             model.addAttribute("messages", messages);
+            model.addAttribute("conversationId", conversationId);
         } catch (Exception e) {
             logger.error("获取详情消息失败" + e.getMessage());
         }
@@ -137,6 +138,18 @@ public class MessageController {
         } catch (Exception e) {
             logger.error("增加评论失败" + e.getMessage());
             return JsonUtil.getJSONString(1, "插入评论失败");
+        }
+    }
+
+    @RequestMapping(path = {"/msg/delMessage"}, method = {RequestMethod.GET})
+    //@ResponseBody
+    public String addMessage(@RequestParam("msgId") int msgId , @Param("conversationId") String conversationId) {
+        try {
+            messageService.delMessageById(msgId);
+            return "redirect:/msg/detail?conversationId=" + conversationId;
+        } catch (Exception e) {
+            logger.error("增加评论失败" + e.getMessage());
+            return "redirect:/msg/detail?conversationId=" + conversationId;
         }
     }
 }

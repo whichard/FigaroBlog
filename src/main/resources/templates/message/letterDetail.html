@@ -20,7 +20,7 @@
                     <div class="tooltip-inner letter-chat clearfix">
                         <div class="letter-info">
                             <p class="letter-time" th:text="${#dates.format(msg.get('message').getCreatedDate(),'yyyy-MM-dd HH:mm:ss')}"></p>
-                            <a href="javascript:void(0);" id="del-link" name="4009580">删除</a>
+                            <a href="/msg/delMessage/" th:href="'/msg/delMessage/?msgId='+${msg.get('message').getId()} + '&conversationId=' + ${conversationId}" id="del-link" name="4009580">删除</a>
                         </div>
                         <p class="chat-content" th:text="${msg.get('message').getContent()}">
                             $!{msg.message.content}
