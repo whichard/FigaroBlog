@@ -19,14 +19,14 @@
 							<div class="card-block">
 								<h2 class="card-title">
 									<span> <a href="/u/waylau" title="waylau"
-										th:href="'/u/' + ${blog.username}" th:title="${blog.username}">
+										th:href="'/u/' + ${blog.user.username}" th:title="${blog.user.username}">
 											<img src="/images/avatar-defualt.jpg"
-											th:src="${blog.avatar} == null ? '/images/avatar-defualt.jpg' : ${blog.avatar}"
+											th:src="${blog.user.avatar} == null ? '/images/avatar-defualt.jpg' : ${blog.user.avatar}"
 											class="blog-avatar-50">
 									</a>
 									</span> <a href="/u/waylau/blogs/1" class="card-link blog-title"
 										title="waylau"
-										th:href="'/u/' + ${blog.username} + '/blogs/'+ ${blog.blogId}"
+										th:href="'/u/' + ${blog.user.username} + '/blogs/'+ ${blog.id}"
 										th:title="${blog.title}"> <span style="color: #ff0000"
 										th:if="${blog.priority}">[置顶]</span>[[${blog.title}]]
 									</a>
@@ -37,8 +37,8 @@
 									本文将介绍 OAuth 2.0 的原理，并基于 Spring Security 和 GitHub 账号，来演示 OAuth
 									2.0 的认证的过程。</p>
 								<div class="card-text">
-									<a href="/u/waylau" th:href="'/u/' + ${blog.username}"
-										class="card-link blog-author" th:text=${blog.username}>waylau</a>
+									<a href="/u/waylau" th:href="'/u/' + ${blog.user.username}"
+										class="card-link blog-author" th:text=${blog.user.username}>waylau</a>
 									发表于 [[${#dates.format(blog.createTime, 'yyyy-MM-dd HH:mm')}]] <span
 										class="fr"> <i class="fa fa-eye" aria-hidden="true">[[${blog.readSize}]]</i>
 										<i class="fa fa-thumbs-o-up" aria-hidden="true">[[${blog.voteSize}]]</i>

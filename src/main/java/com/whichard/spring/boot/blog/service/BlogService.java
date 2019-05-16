@@ -50,20 +50,21 @@ public class BlogService {
     private Blog setScore(Blog blog) {
         Date date = new Date();
         double newscore = 0.0;
-        newscore = Math.log(blog.getReadSize()) + blog.getCommentSize() + blog.getVoteSize();
+        newscore = Math.log(blog.getReadSize()) * 4 + blog.getCommentSize() + blog.getVoteSize();
 
         long blogAge = 1, lastCommentAge = 1;
         try {
             if(blog.getCreateTime() != null)
                 blogAge = (date.getTime() - blog.getCreateTime().getTime()) / (1000*3600*24);//getTime() 毫秒数 1000*3600 = 1小时
-            lastCommentAge = (date.getTime() - blog.getLastCommentTime().getTime()) / (1000*3600*24);
+            if(blog.getLastCommentTime() != null)
+                lastCommentAge = (date.getTime() - blog.getLastCommentTime().getTime()) / (1000*3600*24);
         } catch (Exception e) {
 
         }
-        if(blogAge >= 1)
-            newscore = newscore / blogAge;
-        if(lastCommentAge >= 1)
-            newscore = newscore / lastCommentAge;
+        double ageScore = 0;
+        ageScore = (blogAge + 1) - (lastCommentAge / 2);
+        if(ageScore >= 1)
+            newscore = newscore / ageScore;
         if(newscore >= 0)
             blog.setScore(newscore);
         return blog;
