@@ -1,4 +1,4 @@
-INSERT INTO user (id, username, password, name, email) VALUES (1, 'wqe', '0a0484413c1f2968933d7fa2bfa2b429', 'wq', 'whichard@wq.com');
+INSERT INTO user (id, username, password, name, email) VALUES (1, 'wqe', '0a0484413c1f2968933d7fa2bfa2b429', 'wq', 'whichard@qq.com');
 INSERT INTO user (id, username, password, name, email)  VALUES (2, 'admin', '0a0484413c1f2968933d7fa2bfa2b429', 'admin', 'whichard@wq.com');
 INSERT INTO user (id, username, password, name, email)  VALUES (3, 'zll', '0a0484413c1f2968933d7fa2bfa2b429', 'zll', 'zlu40@qq.com');
 INSERT INTO user (id, username, password, name, email)  VALUES (4, 'zl2', '0a0484413c1f2968933d7fa2bfa2b429', 'zl2', 'zlu402@qq.com');

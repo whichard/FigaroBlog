@@ -49,6 +49,8 @@ repositories {
 
 // 依赖关系
 dependencies {
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	
 	// 该依赖对于编译发行是必须的
 	compile('org.springframework.boot:spring-boot-starter-web')
 
