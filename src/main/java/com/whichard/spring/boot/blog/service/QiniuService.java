@@ -27,7 +27,7 @@ public class QiniuService {
     String ACCESS_KEY = "25CAhzJsYFOjjU8zSAirfMz6XWZ2xeXBpdPKbcWg";
     String SECRET_KEY = "OFmQFChIKPFxvnJSmSaoKhs4Z5CgROLAdtWq8T0p";
     //要上传的空间
-    String bucketname = "newcoder";
+    String bucketname = "myblog";
 
     //密钥配置
     Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
@@ -38,7 +38,7 @@ public class QiniuService {
 
 
     //pr0i35ced.bkt.clouddn.com
-    private static String QINIU_IMAGE_DOMAIN = "http://pr0i35ced.bkt.clouddn.com/";
+    private static String QINIU_IMAGE_DOMAIN = "http://cdn.whichard.cn/";
 
     //简单上传，使用默认策略，只需要设置上传的空间名就可以了
     public String getUpToken() {

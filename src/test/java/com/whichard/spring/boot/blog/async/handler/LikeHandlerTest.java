@@ -28,4 +28,12 @@ public class LikeHandlerTest {
         );
     }
 
+    @Test
+    public void test1() {
+        //User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        eventProducer.fireEvent(new EventModel(EventType.LIKE)
+                .setActorId(1).setEntityId(1)
+        );
+    }
+
 }
