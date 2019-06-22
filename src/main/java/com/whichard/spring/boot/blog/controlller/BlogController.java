@@ -1,8 +1,14 @@
 package com.whichard.spring.boot.blog.controlller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.whichard.spring.boot.blog.async.EventModel;
+import com.whichard.spring.boot.blog.async.EventProducer;
+import com.whichard.spring.boot.blog.async.EventType;
 import com.whichard.spring.boot.blog.domain.Blog;
+import com.whichard.spring.boot.blog.service.BadIpLoginService;
 import com.whichard.spring.boot.blog.service.BlogService;
 import com.whichard.spring.boot.blog.service.MessageService;
 import com.whichard.spring.boot.blog.vo.Response;
@@ -42,6 +48,12 @@ public class BlogController {
     @Autowired
     MessageService messageService;
 
+    @Autowired
+    EventProducer eventProducer;
+
+    @Autowired
+    BadIpLoginService badIpLoginService;
+
     /**
      * @param async
      * @param pageIndex
@@ -76,27 +88,48 @@ public class BlogController {
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
             Model model) {
 
-        Page<Blog> page = null;
+        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+                && !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
+            User user = null;
+            try {
+                user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            } catch (Exception e1) {
+            }
+            //System.out.println(user == null ? null : user.getUsername());
+            //System.out.println(badIpLoginService.getCurrentAddress());
+            String addr = badIpLoginService.getCurrentAddress();
+            if(user.getAddress() == null)
+                user.setAddress(addr);
+            else if(addr != user.getAddress()) {
+                System.out.println("异地登录：" + addr);
+                eventProducer.fireEvent(new EventModel(EventType.MAIL)
+                        .setActorId(user.getId().intValue()).setExts("username", user.getUsername()).setExts("addr", addr)
+                );
+            }
 
-        List<Blog> list = null;
+        }
+
+        Page<EsBlog> page = null;
+
+        List<EsBlog> list = null;
         boolean isEmpty = true; // 系统初始化时，没有博客数据
         try {
             if (order.equals("hot")) { // 最热查询
                 //              Sort sort = new Sort(Direction.DESC,"priority","readSize","commentSize","voteSize","createTime");
                 Pageable pageable = new PageRequest(pageIndex, pageSize);
-                //page = esBlogService.listHotestEsBlogs(keyword, pageable);
-                page = blogService.listHotestBlogs(pageable);
+                page = esBlogService.listHotestEsBlogs(keyword, pageable);
+                //page = blogService.listHotestBlogs(pageable);
             } else if (order.equals("new")) { // 最新查询
                 //             Sort sort = new Sort(Direction.DESC,"priority","createTime");
                 Pageable pageable = new PageRequest(pageIndex, pageSize);
-                //page = esBlogService.listNewestEsBlogs(keyword, pageable);
-                page = blogService.listNewestBlogs(pageable);
+                page = esBlogService.listNewestEsBlogs(keyword, pageable);
+                //page = blogService.listNewestBlogs(pageable);
             }
 
             isEmpty = false;
         } catch (Exception e) {
             Pageable pageable = new PageRequest(pageIndex, pageSize);
-            page = blogService.listAllBlogs(pageable);
+            //page = blogService.listAllBlogs(pageable);
         }
 
         list = page.getContent();   // 当前所在页面数据列表
