@@ -24,9 +24,10 @@ Redis：常用博客页面缓存，博客点赞阅读量评论数存储，异步
 Elastic Search：导航栏检索系统，首页热门用户热门标签，中文分词应用，**检索权重优化** 性能优化
 
 ## 系统部署需求
-1.Java版本：JDK1.8
-2.ElasticSearch：版本2.4
-3.Redis
-4.Tomcat
+1. Java版本：JDK1.8
+2. ElasticSearch：版本2.4
+3. Redis
+4. Tomcat
+
 以上环境建议使用Docker部署。
 项目clone到本地可直接使用Gradle bootRun编译生成war包，部署到Tomacat的webapp目录即可
