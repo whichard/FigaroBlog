@@ -38,8 +38,9 @@ Elastic Search：导航栏检索系统，首页热门用户热门标签，中文
 4. Tomcat
 
 以上环境建议使用Docker部署。
-项目clone到本地可直接使用Gradle bootRun编译生成war包，部署到Tomacat的webapp目录即可
-##Todo
+项目clone到本地可直接使用Gradle bootRun编译生成war包，部署到Tomacat的webapp目录即可。
+
+## Todo
 - 邮件注册和登录
 - 关注和粉丝功能
 - 使用DoubleArrayTrie重构Trie模块，进一步优化空间占用
