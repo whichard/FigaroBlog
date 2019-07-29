@@ -21,7 +21,7 @@
 
 登录注册模块：SpringSecurity权限验证，密码md5加盐存储，CSRFToken验证
 
-文件传输：文件分片上传，多文件同时传，重复文件秒传，七牛云对象存储，七牛云图片压缩下载
+文件传输：七牛云对象存储，七牛云图片压缩下载
 
 消息中心：消息列表未读消息标记，点赞消息，异地登录消息
 
@@ -35,14 +35,19 @@ Elastic Search：导航栏检索系统，首页热门用户热门标签，中文
 
 ## 系统部署需求
 1. Java版本：JDK1.8
-2. ElasticSearch：版本2.4
+2. ElasticSearch：版本2.4，使用项目内文档创建索引blog，如果是远程服务端，推荐使用Postman发送Json数据配置
 3. Redis
 4. Tomcat
-
-以上环境建议使用Docker部署。
-项目clone到本地可直接使用Gradle bootRun编译生成war包，部署到Tomacat的webapp目录即可。
+5. MySQL 创建blog数据库，并设置编码为UTF-8. 配置文件中的默认用户名和密码为root和123456
+6. 项目内配置：邮件部分设置为自己的QQ邮箱、七牛云替换为自己的域名和Key
+以上环境推荐使用Docker部署。
+## Quickly Start
+1. 项目clone到本地
+2. 使用Gradle bootRun编译生成war包
+3. 把war包部署到服务端Tomacat的webapp目录即可
 
 ## Todo
 - 邮件注册和登录
 - 关注和粉丝功能
 - 使用DoubleArrayTrie重构Trie模块，进一步优化空间占用
+- 文件分片上传，多文件同时传，重复文件秒传，前端预计使用WebUploader
